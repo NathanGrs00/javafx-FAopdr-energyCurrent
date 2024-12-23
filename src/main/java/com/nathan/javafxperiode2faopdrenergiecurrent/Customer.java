@@ -4,37 +4,32 @@ public class Customer {
     private int customerID;
     private String customerFirstName;
     private String customerLastName;
-    private String customerAdvance;
+    private float customerAdvance;
 
-    public int getCustomerID() {
-        return customerID;
-    }
 
     public void setCustomerID(int customerID) {
         this.customerID = customerID;
     }
-
-    public String getCustomerFirstName() {
-        return customerFirstName;
-    }
-
     public void setCustomerFirstName(String customerFirstName) {
         this.customerFirstName = customerFirstName;
     }
-
-    public String getCustomerLastName() {
-        return customerLastName;
-    }
-
     public void setCustomerLastName(String customerLastName) {
         this.customerLastName = customerLastName;
     }
-
-    public String getCustomerAdvance() {
-        return customerAdvance;
+    public void setCustomerAdvance(float customerAdvance) {
+        this.customerAdvance = customerAdvance;
     }
 
-    public void setCustomerAdvance(String customerAdvance) {
-        this.customerAdvance = customerAdvance;
+    public int getCustomerID() {
+        return customerID;
+    }
+    public String getCustomerLastName() {
+        return customerLastName;
+    }
+    public String getCustomerFirstName() {
+        return customerFirstName;
+    }
+    public float getCustomerAdvance() {
+        return customerAdvance;
     }
 }
