@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -17,6 +18,10 @@ import java.time.LocalDate;
 public class MainClass extends Application {
     @Override
     public void start(Stage primaryStage) {
+        setUserSettings(primaryStage);
+    }
+
+    public void setUserSettings(Stage primaryStage){
         // User input for Customer class.
         TextField inputCustomerID = new TextField();
         VBox vboxID = createLabeledInput("Customer ID:", "Customer ID", inputCustomerID);
@@ -68,6 +73,7 @@ public class MainClass extends Application {
         primaryStage.setResizable(false);
         primaryStage.show();
     }
+
     public void setRates(Stage primaryStage, Customer customer) {
         Label helloMessage = new Label("Hello, " + customer.getCustomerFirstName() + ". Please insert the following rates.");
 
@@ -116,7 +122,7 @@ public class MainClass extends Application {
                 gas.setDateGasStart(startDateGas);
                 gas.setDateGasEnd(endDateGas);
 
-                // TODO: navigate to homescreen.
+                getHomepage(primaryStage);
             }
             // If formats are incorrect, show error.
             catch(NumberFormatException ex) {
@@ -137,28 +143,40 @@ public class MainClass extends Application {
     }
 
     // Function to show Menu bar.
-    public Node getMenuBar(){
-        Menu menuItemNew = new Menu("New");
-        Menu menuItemUsage = new Menu("Usage");
-        Menu menuItemSettings = new Menu("Settings");
+    public Node getMenuBar(Stage primaryStage) {
+        Menu menuNew = new Menu("New");
+        Menu menuUsage = new Menu("Usage");
+        Menu menuSettings = new Menu("Settings");
         MenuBar menuBar = new MenuBar();
+        menuBar.getMenus().addAll(menuNew, menuUsage, menuSettings);
 
-        // TODO: make navigation work.
-        menuItemNew.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
+        // TODO: make all navigation work.
+        MenuItem menuItemNew1 = new MenuItem("New Usage");
+        MenuItem menuItemUsage1 = new MenuItem("Per Week");
+        MenuItem menuItemUsage2 = new MenuItem("Per Month");
+        MenuItem menuItemUsage3 = new MenuItem("Per Year");
+        MenuItem menuItemSettings = new MenuItem("Change Settings");
+        menuNew.getItems().addAll(menuItemNew1);
+        menuUsage.getItems().addAll(menuItemUsage1, menuItemUsage2, menuItemUsage3);
+        menuSettings.getItems().addAll(menuItemSettings);
 
-            }
+        menuItemSettings.setOnAction(e ->{
+            setUserSettings(primaryStage);
         });
-        menuBar.getMenus().addAll(menuItemNew, menuItemUsage, menuItemSettings);
         return menuBar;
     }
 
     // Function to show the homepage.
-    public void getHomepage() {
+    public void getHomepage(Stage primaryStage) {
         //TODO: make homepage.
+        BorderPane root = new BorderPane();
+        root.setTop(getMenuBar(primaryStage));
+
+        Scene scene = new Scene(root, 1280, 720);
+        primaryStage.setScene(scene);
     }
 
+    // Function for creating labeled inputs.
     private VBox createLabeledInput(String labelText, String promptText, TextField inputField) {
         Label label = new Label(labelText);
         inputField.setPromptText(promptText);
