@@ -8,32 +8,27 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.time.LocalDate;
+
 public class MainClass extends Application {
     @Override
-    public void start(Stage stage) {
+    public void start(Stage primaryStage) {
         // User input for Customer class.
-        Label txtCustomerID = new Label("Customer ID:");
         TextField inputCustomerID = new TextField();
-        inputCustomerID.setPromptText("Customer ID");
-        VBox vboxID = new VBox(txtCustomerID, inputCustomerID);
+        VBox vboxID = createLabeledInput("Customer ID:", "Customer ID", inputCustomerID);
 
-        Label txtFirstName = new Label("First name:");
         TextField inputFirstName = new TextField();
-        inputFirstName.setPromptText("First Name");
-        VBox vboxFirstName = new VBox(txtFirstName, inputFirstName);
+        VBox vboxFirstName = createLabeledInput("First name:", "First name", inputFirstName);
 
-        Label txtLastName = new Label("Last name:");
         TextField inputLastName = new TextField();
-        inputLastName.setPromptText("Last Name");
-        VBox vboxLastName = new VBox(txtLastName, inputLastName);
+        VBox vboxLastName = createLabeledInput("Last name:", "Last name", inputLastName);
 
-        Label txtAdvance = new Label("Yearly advance:");
         TextField inputAdvance = new TextField();
-        inputAdvance.setPromptText("Yearly advance");
-        VBox vboxAdvance = new VBox(txtAdvance, inputAdvance);
+        VBox vboxAdvance = createLabeledInput("Advance:", "Advance", inputAdvance);
 
         // Saving the input to the setters of the Customer class.
         Button buttonSend = new Button("Send");
@@ -45,11 +40,12 @@ public class MainClass extends Application {
                 String strFirstName = inputFirstName.getText();
                 String strLastName = inputLastName.getText();
                 float fltAdvance = Float.parseFloat(inputAdvance.getText());
-                //Setting users input.
+                // Setting users input.
                 customer.setCustomerID(intCustomerID);
                 customer.setCustomerFirstName(strFirstName);
                 customer.setCustomerLastName(strLastName);
                 customer.setCustomerAdvance(fltAdvance);
+                setRates(primaryStage, customer);
             }
             // If formats are incorrect, show error.
             catch(NumberFormatException ex) {
@@ -61,16 +57,83 @@ public class MainClass extends Application {
             }
         });
 
-        VBox centerPane = new VBox(vboxID, vboxFirstName, vboxLastName, vboxAdvance, buttonSend);
-        centerPane.setAlignment(Pos.CENTER_LEFT);
-        centerPane.setSpacing(12);
-        centerPane.setPadding(new Insets(0,20,0,20));
-        Scene scene = new Scene(centerPane, 480, 270);
+        VBox inputFieldsCustomer = new VBox(vboxID, vboxFirstName, vboxLastName, vboxAdvance, buttonSend);
+        inputFieldsCustomer.setAlignment(Pos.CENTER_LEFT);
+        inputFieldsCustomer.setSpacing(12);
+        inputFieldsCustomer.setPadding(new Insets(0,20,0,20));
+        Scene scene = new Scene(inputFieldsCustomer, 480, 270);
 
-        stage.setTitle("Energy company 'Current'");
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.show();
+        primaryStage.setTitle("Energy company 'Current'");
+        primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
+        primaryStage.show();
+    }
+    public void setRates(Stage primaryStage, Customer customer) {
+        Label helloMessage = new Label("Hello, " + customer.getCustomerFirstName() + ". Please insert the following rates.");
+
+        TextField inputCurrentRate = new TextField();
+        VBox vboxCurrentRate = createLabeledInput("Please enter the rate for Current per kWh:", "Current Rate", inputCurrentRate);
+
+        Label txtDateCurrent = new Label("Please enter the start and end date.");
+        DatePicker dateCurrentStart = new DatePicker();
+        dateCurrentStart.setPromptText("Start Date");
+        DatePicker dateCurrentEnd = new DatePicker();
+        dateCurrentEnd.setPromptText("End Date");
+        HBox hboxDatesCurrent = new HBox(dateCurrentStart, dateCurrentEnd);
+
+        VBox vboxCurrent = new VBox(vboxCurrentRate, txtDateCurrent, hboxDatesCurrent);
+
+        TextField inputGasRate = new TextField();
+        VBox vboxGasRate = createLabeledInput("Please enter the rate for Gas per m3:", "Gas Rate", inputGasRate);
+
+        Label txtDateGas = new Label("Please enter the start and end date.");
+        DatePicker dateGasStart = new DatePicker();
+        dateGasStart.setPromptText("Start Date");
+        DatePicker dateGasEnd = new DatePicker();
+        dateGasEnd.setPromptText("End Date");
+        HBox hboxDatesGas = new HBox(dateGasStart, dateGasEnd);
+
+        VBox vboxGas = new VBox(vboxGasRate, txtDateGas, hboxDatesGas);
+
+        Button buttonSend = new Button("Send");
+        buttonSend.setOnAction(e ->{
+            // First trying the users input.
+            try {
+                Current current = new Current();
+                Gas gas = new Gas();
+                float rateCurrent = Float.parseFloat(inputCurrentRate.getText());
+                LocalDate startDateCurrent = dateCurrentStart.getValue();
+                LocalDate endDateCurrent = dateCurrentEnd.getValue();
+                float rateGas = Float.parseFloat(inputGasRate.getText());
+                LocalDate startDateGas = dateGasStart.getValue();
+                LocalDate endDateGas = dateGasEnd.getValue();
+
+                // Setting users input.
+                current.setCurrent(rateCurrent);
+                current.setDateCurrentStart(startDateCurrent);
+                current.setDateCurrentEnd(endDateCurrent);
+                gas.setGas(rateGas);
+                gas.setDateGasStart(startDateGas);
+                gas.setDateGasEnd(endDateGas);
+
+                // TODO: navigate to homescreen.
+            }
+            // If formats are incorrect, show error.
+            catch(NumberFormatException ex) {
+                getAlert("Please fill in the fields with the correct format.");
+            }
+            catch(Exception ex) {
+                getAlert("Oops! Something went wrong.");
+            }
+        });
+
+        VBox inputFieldsRates = new VBox(helloMessage, vboxCurrent, vboxGas, buttonSend);
+        inputFieldsRates.setAlignment(Pos.CENTER_LEFT);
+        inputFieldsRates.setSpacing(12);
+        inputFieldsRates.setPadding(new Insets(0,20,0,20));
+
+        Scene scene = new Scene(inputFieldsRates, 480, 270);
+        primaryStage.setScene(scene);
     }
 
     // Function to show Menu bar.
@@ -94,6 +157,12 @@ public class MainClass extends Application {
     // Function to show the homepage.
     public void getHomepage() {
         //TODO: make homepage.
+    }
+
+    private VBox createLabeledInput(String labelText, String promptText, TextField inputField) {
+        Label label = new Label(labelText);
+        inputField.setPromptText(promptText);
+        return new VBox(label, inputField);
     }
 
     // Alert function to get alerts on screen.
