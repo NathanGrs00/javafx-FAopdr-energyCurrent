@@ -1,8 +1,6 @@
 package com.nathan.javafxperiode2faopdrenergiecurrent;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -14,6 +12,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainClass extends Application {
     @Override
@@ -105,22 +105,16 @@ public class MainClass extends Application {
         buttonSend.setOnAction(e ->{
             // First trying the users input.
             try {
-                Current current = new Current();
-                Gas gas = new Gas();
-                float rateCurrent = Float.parseFloat(inputCurrentRate.getText());
+                double rateCurrent = Double.parseDouble(inputCurrentRate.getText());
                 LocalDate startDateCurrent = dateCurrentStart.getValue();
                 LocalDate endDateCurrent = dateCurrentEnd.getValue();
-                float rateGas = Float.parseFloat(inputGasRate.getText());
+                double rateGas = Double.parseDouble(inputGasRate.getText());
                 LocalDate startDateGas = dateGasStart.getValue();
                 LocalDate endDateGas = dateGasEnd.getValue();
 
                 // Setting users input.
-                current.setCurrent(rateCurrent);
-                current.setDateCurrentStart(startDateCurrent);
-                current.setDateCurrentEnd(endDateCurrent);
-                gas.setGas(rateGas);
-                gas.setDateGasStart(startDateGas);
-                gas.setDateGasEnd(endDateGas);
+                Current current = new Current(startDateCurrent, endDateCurrent, rateCurrent);
+                Gas gas = new Gas(startDateGas, endDateGas, rateGas);
 
                 getHomepage(primaryStage);
             }
@@ -172,6 +166,59 @@ public class MainClass extends Application {
         BorderPane root = new BorderPane();
         root.setTop(getMenuBar(primaryStage));
 
+        Label titleLabel = new Label("Add new weekly usage");
+        TextField newGasUsage = new TextField();
+        VBox vboxNewGas = createLabeledInput("Gas usage this week:", "Gas Usage in m3", newGasUsage);
+
+        Label txtDateGas = new Label("Please enter the start and end date.");
+        DatePicker dateGasStart = new DatePicker();
+        DatePicker dateGasEnd = new DatePicker();
+        HBox hboxDatesGas = new HBox(dateGasStart, dateGasEnd);
+        VBox vboxGas = new VBox(vboxNewGas, txtDateGas, hboxDatesGas);
+        dateGasStart.setPromptText("Start Date");
+        dateGasEnd.setPromptText("End Date");
+
+        TextField newCurrentUsage = new TextField();
+        VBox vboxNewCurrent = createLabeledInput("Current usage this week:", "Current usage in kWh", newCurrentUsage);
+
+        Label txtDateCurrent = new Label("Please enter the start and end date.");
+        DatePicker dateCurrentStart = new DatePicker();
+        DatePicker dateCurrentEnd = new DatePicker();
+        HBox hboxDatesCurrent = new HBox(dateCurrentStart, dateCurrentEnd);
+        VBox vboxCurrent = new VBox(vboxNewCurrent, txtDateCurrent, hboxDatesCurrent);
+        dateCurrentStart.setPromptText("Start Date");
+        dateCurrentEnd.setPromptText("End Date");
+
+        Button submitNewUsage = new Button("Submit New Usage");
+
+        submitNewUsage.setOnAction(e ->{
+            try {
+                double usageGas = Double.parseDouble(newGasUsage.getText());
+                LocalDate startDateCurrent = dateCurrentStart.getValue();
+                LocalDate endDateCurrent = dateCurrentEnd.getValue();
+                double usageCurrent = Double.parseDouble(newCurrentUsage.getText());
+                LocalDate startDateGas = dateGasStart.getValue();
+                LocalDate endDateGas = dateGasEnd.getValue();
+                List<Date> contracts = new ArrayList<>();
+
+                contracts.add(new Current(startDateCurrent, endDateCurrent, usageCurrent));
+                contracts.add(new Gas(startDateGas, endDateGas, usageGas));
+            }
+            // If formats are incorrect, show error.
+            catch(NumberFormatException ex) {
+                getAlert("Please fill in the fields with the correct format.");
+            }
+            catch(Exception ex) {
+                getAlert("Oops! Something went wrong.");
+            }
+        });
+
+        VBox vboxCenter = new VBox(titleLabel, vboxGas, vboxCurrent, submitNewUsage);
+        vboxCenter.setAlignment(Pos.CENTER_LEFT);
+        vboxCenter.setSpacing(12);
+        vboxCenter.setPadding(new Insets(0,20,0,20));
+
+        root.setCenter(vboxCenter);
         Scene scene = new Scene(root, 1280, 720);
         primaryStage.setScene(scene);
     }
