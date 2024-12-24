@@ -1,8 +1,8 @@
-package com.nathan.javafxperiode2faopdrenergiecurrent;
+package com.nathan.javafxperiode2faopdrenergiecurrent.model;
 
 import java.time.LocalDate;
 
-public class Usage extends Date{
+public class Usage extends Date {
     private double currentUsage;
     private double gasUsage;
 

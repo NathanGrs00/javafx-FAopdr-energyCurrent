@@ -1,4 +1,4 @@
-package com.nathan.javafxperiode2faopdrenergiecurrent;
+package com.nathan.javafxperiode2faopdrenergiecurrent.model;
 
 public class Customer {
     private int customerID;
