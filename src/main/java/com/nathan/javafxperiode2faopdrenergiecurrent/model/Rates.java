@@ -1,5 +1,6 @@
 package com.nathan.javafxperiode2faopdrenergiecurrent.model;
 
+//Rates class.
 public class Rates {
     private double currentRate;
     private double gasRate;

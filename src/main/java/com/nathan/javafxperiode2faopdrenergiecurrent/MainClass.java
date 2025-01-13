@@ -15,15 +15,18 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class MainClass extends Application {
+    // Initializes classes used by multiple functions.
     Utility util = new Utility();
     UsageController uController = new UsageController();
     Rates rates = new Rates();
 
+    //Starting by going to the settings.
     @Override
     public void start(Stage primaryStage) {
         setUserSettings(primaryStage);
     }
 
+    //Settings page.
     public void setUserSettings(Stage primaryStage){
         // User input for Customer class.
         TextField inputCustomerID = new TextField();
@@ -47,11 +50,13 @@ public class MainClass extends Application {
         buttonSend.setOnAction(e ->{
             // First trying the users input.
             try {
+                //If it's empty, return nothing and give an alert.
                 if (inputCustomerID.getText().isEmpty() || inputFirstName.getText().isEmpty() || inputLastName.getText().isEmpty() || inputAdvance.getText().isEmpty()) {
                     getAlert("Please, fill out all fields.");
                     return;
                 }
 
+                //Parsing and getting values.
                 Customer customer = new Customer();
                 int intCustomerID = Integer.parseInt(inputCustomerID.getText());
                 String strFirstName = inputFirstName.getText();
@@ -62,6 +67,7 @@ public class MainClass extends Application {
                 customer.setCustomerFirstName(strFirstName);
                 customer.setCustomerLastName(strLastName);
                 customer.setCustomerAdvance(fltAdvance);
+                //Moving to next page.
                 setRates(primaryStage, customer);
             }
             // If formats are incorrect, show error.
@@ -74,15 +80,19 @@ public class MainClass extends Application {
             }
         });
 
+        //Setting alignment, spacing and more styling.
         VBox inputFieldsCustomer = new VBox(vboxID, vboxFirstName, vboxLastName, vboxAdvance, buttonSend);
         inputFieldsCustomer.setAlignment(Pos.CENTER_LEFT);
         inputFieldsCustomer.setSpacing(12);
         inputFieldsCustomer.setPadding(new Insets(0,20,0,20));
+        //Putting the root as the scene.
         Scene scene = new Scene(inputFieldsCustomer, 480, 270);
         scene.getStylesheets().add(getClass().getResource("stylesheet.css").toExternalForm());
 
+        //Setting icon.
         Image icon = new Image(getClass().getResourceAsStream("energy.png"));
 
+        //Setting Stage options.
         primaryStage.getIcons().add(icon);
         primaryStage.setTitle("Energy company 'Current'");
         primaryStage.setScene(scene);
@@ -90,9 +100,11 @@ public class MainClass extends Application {
         primaryStage.show();
     }
 
+    //Rates page.
     public void setRates(Stage primaryStage, Customer customer) {
         Label helloMessage = new Label("Hello, " + customer.getCustomerFirstName() + ". Please insert the following rates.");
 
+        //User inputs
         TextField inputCurrentRate = new TextField();
         VBox vboxCurrentRate = util.createLabeledInput("Please enter the rate for Current per kWh:", "Current Rate", inputCurrentRate);
         inputCurrentRate.getStyleClass().add("input-current-rate");
@@ -103,11 +115,12 @@ public class MainClass extends Application {
 
         VBox vboxRates = new VBox(vboxCurrentRate, vboxGasRate);
 
+        //Button with actions when pressed.
         Button buttonSend = new Button("Send");
         buttonSend.setOnAction(e ->{
             // First trying the users input.
             try {
-                // Setting users input.
+                // Setting users input if catch not activated.
                 double gasRate = Double.parseDouble(inputGasRate.getText());
                 double currentRate = Double.parseDouble(inputCurrentRate.getText());
 
@@ -119,11 +132,13 @@ public class MainClass extends Application {
             catch(NumberFormatException ex) {
                 getAlert("Please fill in the fields with the correct format.");
             }
+            // If anything went wrong, show last error.
             catch(Exception ex) {
                 getAlert("Oops! Something went wrong.");
             }
         });
 
+        // Layout options
         VBox inputFieldsRates = new VBox(helloMessage, vboxRates, buttonSend);
         inputFieldsRates.setAlignment(Pos.CENTER_LEFT);
         inputFieldsRates.setSpacing(12);
@@ -139,6 +154,7 @@ public class MainClass extends Application {
         BorderPane root = new BorderPane();
         root.setTop(getMenuBar(primaryStage));
 
+        //User inputs
         Label usageTypeLabel = new Label("Select type of usage:");
         ComboBox newWeeklyUsage = new ComboBox();
         newWeeklyUsage.getItems().addAll("Gas","Current");
@@ -156,9 +172,11 @@ public class MainClass extends Application {
 
         Button submitNewUsage = new Button("Submit New Usage");
 
+        //Setting the enddate to auto select 7 days (so that input is always a week).
         dateUsageStart.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 dateUsageEnd.setValue(newValue.plusDays(7));
+                //Calling the restricting function
                 restrictEndDatePicker(dateUsageEnd, newValue);
             }
         });
@@ -167,27 +185,30 @@ public class MainClass extends Application {
 
         submitNewUsage.setOnAction(e ->{
             try {
+                //Checking if inputs are empty.
                 if (newWeeklyUsage.getValue() == null || dateUsageEnd.getValue() == null || dateUsageStart.getValue() == null || newWeeklyUsageTextField.getText().isEmpty()) {
                     getAlert("Please, fill out all fields.");
                     return;
                 }
-
+                //Saving inputs as usageclass.
                 double usageNew = Double.parseDouble(newWeeklyUsageTextField.getText());
                 LocalDate startDateUsage = dateUsageStart.getValue();
                 LocalDate endDateUsage = dateUsageEnd.getValue();
                 String instanceKind = newWeeklyUsage.getSelectionModel().getSelectedItem().toString();
                 uController.saveNewUsage(usageNew, rates.getGasRate(), rates.getCurrentRate(), startDateUsage, endDateUsage, instanceKind);
-                getAlert("Usage succesfully added to the list.");
+                getAlert("Usage successfully added to the list.");
             }
             // If formats are incorrect, show error.
             catch(NumberFormatException ex) {
                 getAlert("Please fill in the fields with the correct format.");
             }
+            // More errors.
             catch(Exception ex) {
                 getAlert("Oops! Something went wrong.");
             }
         });
 
+        //Layout options.
         VBox vboxCenter = new VBox(vboxUsage, submitNewUsage);
         vboxCenter.setAlignment(Pos.CENTER_LEFT);
         vboxCenter.setSpacing(12);
@@ -201,12 +222,14 @@ public class MainClass extends Application {
 
     // Function to show Menu bar.
     public Node getMenuBar(Stage primaryStage) {
+        //Menu tabs
         Menu menuNew = new Menu("New");
         Menu menuUsage = new Menu("Usage");
         Menu menuSettings = new Menu("Settings");
         MenuBar menuBar = new MenuBar();
         menuBar.getMenus().addAll(menuNew, menuUsage, menuSettings);
 
+        // Menu Items
         MenuItem menuItemNew = new MenuItem("New Usage");
         MenuItem menuItemUsage = new MenuItem("All Usage");
         MenuItem menuItemSettings = new MenuItem("Change Settings");
@@ -214,6 +237,7 @@ public class MainClass extends Application {
         menuUsage.getItems().addAll(menuItemUsage);
         menuSettings.getItems().addAll(menuItemSettings);
 
+        // Linking to pages.
         menuItemNew.setOnAction(e ->{
             getHomepage(primaryStage);
         });
@@ -227,6 +251,7 @@ public class MainClass extends Application {
         return menuBar;
     }
 
+    //Overview page.
     public void getUsageOverview(Stage primaryStage) {
         BorderPane root = new BorderPane();
         root.setTop(getMenuBar(primaryStage));
@@ -234,6 +259,7 @@ public class MainClass extends Application {
         centerPane.getStyleClass().add("flow-pane");
         root.setCenter(centerPane);
 
+        //Gas getters
         Double weeklyGasAmount = uController.getWeeklyUsage().getFirst();
         Double weeklyGasCost = uController.getCost(weeklyGasAmount).getFirst();
         Double monthlyGasAmount = uController.getMonthlyUsage().getFirst();
@@ -241,6 +267,7 @@ public class MainClass extends Application {
         Double yearlyGasAmount = uController.getYearlyUsage().getFirst();
         Double yearlyGasCost = uController.getCost(yearlyGasAmount).getFirst();
 
+        //Current getters
         Double weeklyCurrentAmount = uController.getWeeklyUsage().getLast();
         Double weeklyCurrentCost = uController.getCost(weeklyCurrentAmount).getLast();
         Double monthlyCurrentAmount = uController.getMonthlyUsage().getLast();
@@ -248,6 +275,7 @@ public class MainClass extends Application {
         Double yearlyCurrentAmount = uController.getYearlyUsage().getLast();
         Double yearlyCurrentCost = uController.getCost(yearlyCurrentAmount).getLast();
 
+        //Labels to display all information. Using the round function to not show huge numbers.
         Label weeklyUsageLabelGas = new Label("Average weekly gas usage: " + UsageController.roundTwoDecimals(weeklyGasAmount) + " m3.");
         Label monthlyUsageLabelGas = new Label("Average monthly gas usage: " + UsageController.roundTwoDecimals(monthlyGasAmount) + " m3.");
         Label yearlyUsageLabelGas = new Label("Average yearly gas usage: " + UsageController.roundTwoDecimals(yearlyGasAmount) + " m3.");
@@ -273,7 +301,9 @@ public class MainClass extends Application {
         listView.getItems().add("----------------------------");
         listView.setPrefWidth(1000);
 
+        //Formatting date to display european style.
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        //Polymorphism to show different text for gas or current.
         for (Usage usage : uController.getList()) {
             if (usage instanceof Gas) {
                 listView.getItems().add("Gas Usage: " + usage.getUsage() + " m³ from " + usage.getDateStart().format(formatter) + " to " + usage.getDateEnd().format(formatter));
@@ -289,11 +319,13 @@ public class MainClass extends Application {
         primaryStage.setScene(scene);
     }
 
+    //Restricting endDatePicker.
     private void restrictEndDatePicker(DatePicker endDatePicker, LocalDate startDate) {
-        endDatePicker.setDayCellFactory(d -> new DateCell() {
+        endDatePicker.setDayCellFactory(e -> new DateCell() {
             @Override
             public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
+                // Disabling.
                 setDisable(item.isBefore(startDate.plusDays(7)) || item.isAfter(startDate.plusDays(7)));
             }
         });
@@ -301,12 +333,12 @@ public class MainClass extends Application {
     // Alert function to get alerts on screen.
     public void getAlert(String message){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Oops!");
+        alert.setTitle("Alert");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }
-
+    // Launch it to the moon.
     public static void main(String[] args) {
         launch();
     }

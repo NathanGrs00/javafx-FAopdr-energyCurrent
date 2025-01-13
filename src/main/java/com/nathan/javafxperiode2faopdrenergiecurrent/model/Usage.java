@@ -1,8 +1,8 @@
 package com.nathan.javafxperiode2faopdrenergiecurrent.model;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
+//Abstract class.
 public abstract class Usage {
     protected double usage;
     protected double rate;
@@ -46,10 +46,6 @@ public abstract class Usage {
 
     public void setDateEnd(LocalDate dateEnd) {
         this.dateEnd = dateEnd;
-    }
-
-    public double calculateRate() {
-        return usage * rate;
     }
 }
 

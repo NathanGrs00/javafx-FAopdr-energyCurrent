@@ -4,6 +4,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+//Utility Class for convenience.
 public class Utility {
     // Function for creating labeled inputs.
     public VBox createLabeledInput(String labelText, String promptText, TextField inputField) {

@@ -3,24 +3,19 @@ package com.nathan.javafxperiode2faopdrenergiecurrent.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class UsageController {
-    double averageGas = 0;
-    double averageCurrent = 0;
-
     private ArrayList<Usage> usageList = new ArrayList<>();
 
+    //Returning all usages.
     public ObservableList<Usage> getList(){
         return FXCollections.observableArrayList(usageList);
     }
 
+    //Save a new Usage. Either as Gas or Current and adding it to the list.
     public void saveNewUsage(double usage, double gasRate, double currentRate, LocalDate dateStart, LocalDate dateEnd, String instanceKind){
         if (instanceKind.equals("Gas")){
             Gas gas = new Gas(gasRate, usage, dateStart, dateEnd);
@@ -32,18 +27,19 @@ public class UsageController {
         }
         else System.out.println("Invalid instance kind");
     }
-
+    //Calculate total days in gas and current usages.
     public ArrayList<Double> getTotalDays(){
         ArrayList<Double> days = new ArrayList<>();
+        //Resetting so it doesn't keep adding.
         final double[] totalDays = {0,0};
 
+        //Foreach loop through the list.
         usageList.forEach(usage->{
             if (usage instanceof Gas){
-                long amountOfDaysGas = ChronoUnit.DAYS.between(usage.getDateStart(), usage.getDateEnd());
-                totalDays[0] += amountOfDaysGas;
+                //Should be always 7, because it's restricted weekly.
+                totalDays[0] += 7;
             } else if (usage instanceof Current){
-                long amountOfDaysCurrent = ChronoUnit.DAYS.between(usage.getDateStart(), usage.getDateEnd());
-                totalDays[1] += amountOfDaysCurrent;
+                totalDays[1] += 7;
             }
         });
         days.add(totalDays[0]);
@@ -51,18 +47,23 @@ public class UsageController {
         return days;
     }
 
-    public double[] getTotalUsage(){
-        final double[] totalUsage = {0,0};
-        usageList.forEach(usage->{
-            if (usage instanceof Gas){
+    // getting the total Usage. (with a while loop because of the assignment).
+    public double[] getTotalUsage() {
+        final double[] totalUsage = {0, 0};
+        int i = 0;
+        while (i < usageList.size()) {
+            Usage usage = usageList.get(i);
+            if (usage instanceof Gas) {
                 totalUsage[0] += usage.getUsage();
-            } else if (usage instanceof Current){
+            } else if (usage instanceof Current) {
                 totalUsage[1] += usage.getUsage();
             }
-        });
+            i++;
+        }
         return totalUsage;
     }
 
+    // Calculate weekly usage.
     public ArrayList<Double> getWeeklyUsage(){
         ArrayList<Double> weeklyUsage = new ArrayList<>();
         ArrayList<Double> totalDays = getTotalDays();
@@ -76,6 +77,7 @@ public class UsageController {
         return weeklyUsage;
     }
 
+    // Calculate monthly usage.
     public ArrayList<Double> getMonthlyUsage(){
         ArrayList<Double> monthlyUsage = new ArrayList<>();
         double[] totalUsage = getTotalUsage();
@@ -88,6 +90,7 @@ public class UsageController {
         return monthlyUsage;
     }
 
+    //Calculate yearly usage.
     public ArrayList<Double> getYearlyUsage(){
         ArrayList<Double> yearlyUsage = new ArrayList<>();
         double[] totalUsage = getTotalUsage();
@@ -100,6 +103,7 @@ public class UsageController {
         return yearlyUsage;
     }
 
+    // Calculating costs.
     public ArrayList<Double> getCost(Double usageAmount){
         ArrayList<Double> cost = new ArrayList<>();
         double[] totalCost = {0,0};
@@ -115,6 +119,7 @@ public class UsageController {
         return cost;
     }
 
+    //Homemade Round up function.
     public static double roundTwoDecimals(double value){
         return Math.round(value * 100.0) / 100.0;
     }

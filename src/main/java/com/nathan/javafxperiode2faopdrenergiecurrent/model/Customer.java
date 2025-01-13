@@ -1,11 +1,11 @@
 package com.nathan.javafxperiode2faopdrenergiecurrent.model;
 
+//Customer class.
 public class Customer {
     private int customerID;
     private String customerFirstName;
     private String customerLastName;
     private float customerAdvance;
-
 
     public void setCustomerID(int customerID) {
         this.customerID = customerID;
