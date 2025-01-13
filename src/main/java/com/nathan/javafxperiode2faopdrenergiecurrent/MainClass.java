@@ -2,6 +2,7 @@ package com.nathan.javafxperiode2faopdrenergiecurrent;
 
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.*;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -44,6 +45,11 @@ public class MainClass extends Application {
         buttonSend.setOnAction(e ->{
             // First trying the users input.
             try {
+                if (inputCustomerID.getText().isEmpty() || inputFirstName.getText().isEmpty() || inputLastName.getText().isEmpty() || inputAdvance.getText().isEmpty()) {
+                    getAlert("Please, fill out all fields.");
+                    return;
+                }
+
                 Customer customer = new Customer();
                 int intCustomerID = Integer.parseInt(inputCustomerID.getText());
                 String strFirstName = inputFirstName.getText();
@@ -121,7 +127,6 @@ public class MainClass extends Application {
 
     // Function to show the homepage.
     public void getHomepage(Stage primaryStage) {
-        //TODO: make homepage.
         BorderPane root = new BorderPane();
         root.setTop(getMenuBar(primaryStage));
 
@@ -149,11 +154,17 @@ public class MainClass extends Application {
 
         submitNewUsage.setOnAction(e ->{
             try {
+                if (newWeeklyUsage.getValue() == null || dateUsageEnd.getValue() == null || dateUsageStart.getValue() == null || newWeeklyUsageTextField.getText().isEmpty()) {
+                    getAlert("Please, fill out all fields.");
+                    return;
+                }
+
                 double usageNew = Double.parseDouble(newWeeklyUsageTextField.getText());
                 LocalDate startDateUsage = dateUsageStart.getValue();
                 LocalDate endDateUsage = dateUsageEnd.getValue();
                 String instanceKind = newWeeklyUsage.getSelectionModel().getSelectedItem().toString();
                 uController.saveNewUsage(usageNew, rates.getGasRate(), rates.getCurrentRate(), startDateUsage, endDateUsage, instanceKind);
+                getAlert("Usage succesfully added to the list.");
             }
             // If formats are incorrect, show error.
             catch(NumberFormatException ex) {
@@ -182,18 +193,17 @@ public class MainClass extends Application {
         MenuBar menuBar = new MenuBar();
         menuBar.getMenus().addAll(menuNew, menuUsage, menuSettings);
 
-        // TODO: make all navigation work.
-        MenuItem menuItemNew1 = new MenuItem("New Usage");
-        MenuItem menuItemUsage1 = new MenuItem("All Usage");
+        MenuItem menuItemNew = new MenuItem("New Usage");
+        MenuItem menuItemUsage = new MenuItem("All Usage");
         MenuItem menuItemSettings = new MenuItem("Change Settings");
-        menuNew.getItems().addAll(menuItemNew1);
-        menuUsage.getItems().addAll(menuItemUsage1);
+        menuNew.getItems().addAll(menuItemNew);
+        menuUsage.getItems().addAll(menuItemUsage);
         menuSettings.getItems().addAll(menuItemSettings);
 
-        menuItemNew1.setOnAction(e ->{
+        menuItemNew.setOnAction(e ->{
             getHomepage(primaryStage);
         });
-        menuItemUsage1.setOnAction(e ->{
+        menuItemUsage.setOnAction(e ->{
             getUsageOverview(primaryStage);
         });
         menuItemSettings.setOnAction(e ->{
@@ -209,13 +219,13 @@ public class MainClass extends Application {
         FlowPane centerPane = new FlowPane();
         root.setCenter(centerPane);
 
-
         Double weeklyGasAmount = uController.getWeeklyUsage().getFirst();
         Double weeklyGasCost = uController.getCost(weeklyGasAmount).getFirst();
         Double monthlyGasAmount = uController.getMonthlyUsage().getFirst();
         Double monthlyGasCost = uController.getCost(monthlyGasAmount).getFirst();
         Double yearlyGasAmount = uController.getYearlyUsage().getFirst();
         Double yearlyGasCost = uController.getCost(yearlyGasAmount).getFirst();
+
         Double weeklyCurrentAmount = uController.getWeeklyUsage().getLast();
         Double weeklyCurrentCost = uController.getCost(weeklyCurrentAmount).getLast();
         Double monthlyCurrentAmount = uController.getMonthlyUsage().getLast();
