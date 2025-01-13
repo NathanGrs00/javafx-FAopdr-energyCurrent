@@ -1,6 +1,7 @@
 package com.nathan.javafxperiode2faopdrenergiecurrent.model;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class Date {
     private LocalDate dateStart;
@@ -25,5 +26,9 @@ public class Date {
 
     public LocalDate getDatumEnd() {
         return dateEnd;
+    }
+
+    public long getDays() {
+        return ChronoUnit.DAYS.between(dateStart, dateEnd);
     }
 }

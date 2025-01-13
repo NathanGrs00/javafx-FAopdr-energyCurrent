@@ -2,19 +2,14 @@ package com.nathan.javafxperiode2faopdrenergiecurrent.model;
 
 import java.time.LocalDate;
 
-public class Current extends Date {
-    private double currentPrice;
+public class Current extends Usage {
 
-    public Current(LocalDate dateStart, LocalDate dateEnd, double currentPrice) {
-        super(dateStart, dateEnd);
-        this.currentPrice = currentPrice;
+    public Current(double currentRate, double currentUsage, LocalDate dateStart, LocalDate dateEnd) {
+        super(currentRate, currentUsage, dateStart, dateEnd);
     }
 
-    public void setCurrentPrice(double currentPrice) {
-        this.currentPrice = currentPrice;
-    }
-
-    public double getCurrentPrice() {
-        return currentPrice;
+    @Override
+    public String toString() {
+        return "Current Usage: " + usage + " kWh from " + dateStart + " to " + dateEnd;
     }
 }

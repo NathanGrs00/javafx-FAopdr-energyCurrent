@@ -8,6 +8,8 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -15,6 +17,7 @@ import java.time.LocalDate;
 
 public class MainClass extends Application {
     Utility util = new Utility();
+    UsageController usageController = new UsageController();
 
     @Override
     public void start(Stage primaryStage) {
@@ -79,34 +82,22 @@ public class MainClass extends Application {
 
         TextField inputCurrentRate = new TextField();
         VBox vboxCurrentRate = util.createLabeledInput("Please enter the rate for Current per kWh:", "Current Rate", inputCurrentRate);
-        DatePicker dateCurrentStartRate = new DatePicker();
-        DatePicker dateCurrentEndRate = new DatePicker();
-        VBox vboxDatesCurrent = util.createDateInput(dateCurrentStartRate, dateCurrentEndRate);
-
-        VBox vboxCurrent = new VBox(vboxCurrentRate, vboxDatesCurrent);
 
         TextField inputGasRate = new TextField();
         VBox vboxGasRate = util.createLabeledInput("Please enter the rate for Gas per m3:", "Gas Rate", inputGasRate);
-        DatePicker dateGasStartRate = new DatePicker();
-        DatePicker dateGasEndRate = new DatePicker();
-        VBox vboxDatesGas = util.createDateInput(dateGasStartRate, dateGasEndRate);
 
-        VBox vboxGas = new VBox(vboxGasRate, vboxDatesGas);
+        VBox vboxRates = new VBox(vboxCurrentRate, vboxGasRate);
 
         Button buttonSend = new Button("Send");
         buttonSend.setOnAction(e ->{
             // First trying the users input.
             try {
-                double rateCurrent = Double.parseDouble(inputCurrentRate.getText());
-                LocalDate startDateCurrentRate = dateCurrentStartRate.getValue();
-                LocalDate endDateCurrentRate = dateCurrentEndRate.getValue();
-                double rateGas = Double.parseDouble(inputGasRate.getText());
-                LocalDate startDateGasRate = dateGasStartRate.getValue();
-                LocalDate endDateGasRate = dateGasEndRate.getValue();
-
                 // Setting users input.
-                new Current(startDateCurrentRate, endDateCurrentRate, rateCurrent);
-                new Gas(startDateGasRate, endDateGasRate, rateGas);
+                double gasRate = Double.parseDouble(inputGasRate.getText());
+                double currentRate = Double.parseDouble(inputCurrentRate.getText());
+                Rates rates = new Rates();
+                rates.setGasRate(gasRate);
+                rates.setCurrentRate(currentRate);
 
                 getHomepage(primaryStage);
             }
@@ -119,7 +110,7 @@ public class MainClass extends Application {
             }
         });
 
-        VBox inputFieldsRates = new VBox(helloMessage, vboxCurrent, vboxGas, buttonSend);
+        VBox inputFieldsRates = new VBox(helloMessage, vboxRates, buttonSend);
         inputFieldsRates.setAlignment(Pos.CENTER_LEFT);
         inputFieldsRates.setSpacing(12);
         inputFieldsRates.setPadding(new Insets(0,20,0,20));
@@ -134,28 +125,26 @@ public class MainClass extends Application {
         BorderPane root = new BorderPane();
         root.setTop(getMenuBar(primaryStage));
 
-        Label titleLabel = new Label("Add new weekly usage");
-        TextField newGasUsage = new TextField();
-        VBox vboxNewGas = util.createLabeledInput("Gas usage this week:", "Gas Usage in m3", newGasUsage);
-
-        TextField newCurrentUsage = new TextField();
-        VBox vboxNewCurrent = util.createLabeledInput("Current usage this week:", "Current usage in kWh", newCurrentUsage);
+        Label usageTypeLabel = new Label("Select type of usage:");
+        ComboBox newWeeklyUsage = new ComboBox();
+        newWeeklyUsage.getItems().addAll("Gas","Current");
+        TextField newWeeklyUsageTextField = new TextField();
+        VBox vboxUsageAmount = util.createLabeledInput("Add new weekly usage","Usage amount", newWeeklyUsageTextField);
 
         DatePicker dateUsageStart = new DatePicker();
         DatePicker dateUsageEnd = new DatePicker();
         VBox vboxUsageDate = util.createDateInput(dateUsageStart, dateUsageEnd);
-        VBox vboxUsage = new VBox(vboxNewCurrent, vboxNewGas, vboxUsageDate);
+        VBox vboxUsage = new VBox(usageTypeLabel, newWeeklyUsage, vboxUsageAmount, vboxUsageDate);
 
         Button submitNewUsage = new Button("Submit New Usage");
-
+        Rates rates = new Rates();
         submitNewUsage.setOnAction(e ->{
             try {
-                double usageGas = Double.parseDouble(newGasUsage.getText());
+                double usageNew = Double.parseDouble(newWeeklyUsageTextField.getText());
                 LocalDate startDateUsage = dateUsageStart.getValue();
                 LocalDate endDateUsage = dateUsageEnd.getValue();
-                double usageCurrent = Double.parseDouble(newCurrentUsage.getText());
-
-                new Usage(startDateUsage, endDateUsage, usageCurrent, usageGas);
+                String instanceKind = newWeeklyUsage.getSelectionModel().getSelectedItem().toString();
+                usageController.saveNewUsage(usageNew, rates.getGasRate(), rates.getCurrentRate(), startDateUsage, endDateUsage, instanceKind);
             }
             // If formats are incorrect, show error.
             catch(NumberFormatException ex) {
@@ -166,7 +155,7 @@ public class MainClass extends Application {
             }
         });
 
-        VBox vboxCenter = new VBox(titleLabel, vboxUsage, submitNewUsage);
+        VBox vboxCenter = new VBox(vboxUsage, submitNewUsage);
         vboxCenter.setAlignment(Pos.CENTER_LEFT);
         vboxCenter.setSpacing(12);
         vboxCenter.setPadding(new Insets(0,20,0,20));
@@ -186,18 +175,56 @@ public class MainClass extends Application {
 
         // TODO: make all navigation work.
         MenuItem menuItemNew1 = new MenuItem("New Usage");
-        MenuItem menuItemUsage1 = new MenuItem("Per Week");
-        MenuItem menuItemUsage2 = new MenuItem("Per Month");
-        MenuItem menuItemUsage3 = new MenuItem("Per Year");
+        MenuItem menuItemUsage1 = new MenuItem("All Usage");
+        MenuItem menuItemUsage2 = new MenuItem("Per Year");
+        MenuItem menuItemUsage3 = new MenuItem("Per Month");
+        MenuItem menuItemUsage4 = new MenuItem("Per Year");
         MenuItem menuItemSettings = new MenuItem("Change Settings");
         menuNew.getItems().addAll(menuItemNew1);
-        menuUsage.getItems().addAll(menuItemUsage1, menuItemUsage2, menuItemUsage3);
+        menuUsage.getItems().addAll(menuItemUsage1, menuItemUsage2, menuItemUsage3, menuItemUsage4);
         menuSettings.getItems().addAll(menuItemSettings);
 
+        menuItemNew1.setOnAction(e ->{
+            getHomepage(primaryStage);
+        });
+        menuItemUsage1.setOnAction(e ->{
+            getUsageOverview(primaryStage);
+        });
         menuItemSettings.setOnAction(e ->{
             setUserSettings(primaryStage);
         });
+
         return menuBar;
+    }
+
+    public void getUsageOverview(Stage primaryStage) {
+        BorderPane root = new BorderPane();
+        root.setTop(getMenuBar(primaryStage));
+        FlowPane centerPane = new FlowPane();
+        root.setCenter(centerPane);
+
+        //TODO: make total usage for both gas and current and cost calculations.
+        Label weeklyUsageLabel = new Label("Weekly Usage: € "+ usageController.getWeeklyCost());
+        Label monthlyUsageLabel = new Label(" Monthly Usage: € " + usageController.getMonthlyCost());
+        Label yearlyUsageLabel = new Label(" Yearly Usage: € " + usageController.getYearlyCost());
+
+        ListView<String> listView = new ListView<>();
+        listView.getItems().add("Usage Overview");
+        listView.getItems().add("----------------------------");
+        listView.setPrefWidth(1000);
+
+        for (Usage usage : usageController.getList()) {
+            if (usage instanceof Gas) {
+                listView.getItems().add("Gas Usage: " + usage.getUsage() + " m³ from " + usage.getDateStart() + " to " + usage.getDateEnd());
+            } else if (usage instanceof Current) {
+                listView.getItems().add("Current Usage: " + usage.getUsage() + " kWh from " + usage.getDateStart() + " to " + usage.getDateEnd());
+            }
+        }
+
+        centerPane.getChildren().addAll(weeklyUsageLabel, monthlyUsageLabel, yearlyUsageLabel, listView);
+
+        Scene scene = new Scene(root, 1280, 720);
+        primaryStage.setScene(scene);
     }
 
     // Alert function to get alerts on screen.

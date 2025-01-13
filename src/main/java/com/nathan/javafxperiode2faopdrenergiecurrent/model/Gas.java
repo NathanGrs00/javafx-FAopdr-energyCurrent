@@ -2,19 +2,15 @@ package com.nathan.javafxperiode2faopdrenergiecurrent.model;
 
 import java.time.LocalDate;
 
-public class Gas extends Date {
-    private double gasPrice;
+public class Gas extends Usage {
 
-    public Gas(LocalDate dateStart, LocalDate dateEnd, double gasPrice) {
-        super(dateStart, dateEnd);
-        this.gasPrice = gasPrice;
+    public Gas(double gasRate, double gasUsage, LocalDate dateStart, LocalDate dateEnd) {
+        super(gasRate, gasUsage, dateStart, dateEnd);
     }
 
-    public void setGas(double gas) {
-        this.gasPrice = gas;
+    @Override
+    public String toString() {
+        return "Gas Usage: " + usage + " m³ from " + dateStart + " to " + dateEnd;
     }
 
-    public double getGas() {
-        return gasPrice;
-    }
 }

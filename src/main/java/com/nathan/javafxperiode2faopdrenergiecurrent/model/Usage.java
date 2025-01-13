@@ -1,30 +1,55 @@
 package com.nathan.javafxperiode2faopdrenergiecurrent.model;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
-public class Usage extends Date {
-    private double currentUsage;
-    private double gasUsage;
+public abstract class Usage {
+    protected double usage;
+    protected double rate;
+    protected LocalDate dateStart;
+    protected LocalDate dateEnd;
 
-    public Usage(LocalDate dateStart, LocalDate dateEnd, double currentUsage, double gasUsage) {
-        super(dateStart, dateEnd);
-        this.currentUsage = currentUsage;
-        this.gasUsage = gasUsage;
+    public Usage(double rate, double usage, LocalDate dateStart, LocalDate dateEnd) {
+        this.rate = rate;
+        this.usage = usage;
+        this.dateStart = dateStart;
+        this.dateEnd = dateEnd;
     }
 
-    public void setCurrentUsage(double currentUsage) {
-        this.currentUsage = currentUsage;
+    public double getUsage() {
+        return usage;
     }
 
-    public void setGasUsage(double gasUsage) {
-        this.gasUsage = gasUsage;
+    public void setUsage(double usage) {
+        this.usage = usage;
     }
 
-    public double getCurrentUsage() {
-        return currentUsage;
+    public double getRate() {
+        return rate;
     }
 
-    public double getGasUsage() {
-        return gasUsage;
+    public void setRate(double rate) {
+        this.rate = rate;
+    }
+
+    public LocalDate getDateStart() {
+        return dateStart;
+    }
+
+    public void setDateStart(LocalDate dateStart) {
+        this.dateStart = dateStart;
+    }
+
+    public LocalDate getDateEnd() {
+        return dateEnd;
+    }
+
+    public void setDateEnd(LocalDate dateEnd) {
+        this.dateEnd = dateEnd;
+    }
+
+    public double calculateRate() {
+        return usage * rate;
     }
 }
+
