@@ -68,8 +68,8 @@ public class UsageController {
         ArrayList<Double> totalDays = getTotalDays();
         double[] totalUsage = getTotalUsage();
 
-        averageGas = totalUsage[0] / totalDays.getFirst() * 7;
-        averageCurrent = totalUsage[1] / totalDays.getLast() * 7;
+        Double averageGas = totalUsage[0] / totalDays.getFirst() * 7;
+        Double averageCurrent = totalUsage[1] / totalDays.getLast() * 7;
 
         weeklyUsage.add(averageGas);
         weeklyUsage.add(averageCurrent);
@@ -81,8 +81,8 @@ public class UsageController {
         double[] totalUsage = getTotalUsage();
         ArrayList<Double> totalDays = getTotalDays();
 
-        averageGas = totalUsage[0] / totalDays.getFirst() * 30;
-        averageCurrent = totalUsage[1] / totalDays.getLast() * 30;
+        Double averageGas = totalUsage[0] / totalDays.getFirst() * 30;
+        Double averageCurrent = totalUsage[1] / totalDays.getLast() * 30;
         monthlyUsage.add(averageGas);
         monthlyUsage.add(averageCurrent);
         return monthlyUsage;
@@ -93,22 +93,29 @@ public class UsageController {
         double[] totalUsage = getTotalUsage();
         ArrayList<Double> totalDays = getTotalDays();
 
-        averageGas = totalUsage[0] / totalDays.getFirst() * 365;
-        averageCurrent = totalUsage[1] / totalDays.getLast() * 365;
+        Double averageGas = totalUsage[0] / totalDays.getFirst() * 365;
+        Double averageCurrent = totalUsage[1] / totalDays.getLast() * 365;
         yearlyUsage.add(averageGas);
         yearlyUsage.add(averageCurrent);
         return yearlyUsage;
     }
 
-    public double getWeeklyCost(){
-        return 0;
+    public ArrayList<Double> getCost(Double usageAmount){
+        ArrayList<Double> cost = new ArrayList<>();
+        double[] totalCost = {0,0};
+        usageList.forEach(usage->{
+            if (usage instanceof Gas){
+                totalCost[0] += (usage.getRate() * usageAmount);
+            }else if (usage instanceof Current){
+                totalCost[1] += (usage.getRate() * usageAmount);
+            }
+        });
+        cost.add(totalCost[0]);
+        cost.add(totalCost[1]);
+        return cost;
     }
 
-    public double getMonthlyCost(){
-        return 0;
-    }
-
-    public double getYearlyCost(){
-        return 0;
+    public static double roundTwoDecimals(double value){
+        return Math.round(value * 100.0) / 100.0;
     }
 }

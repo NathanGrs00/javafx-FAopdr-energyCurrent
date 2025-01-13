@@ -13,10 +13,12 @@ import javafx.stage.Stage;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainClass extends Application {
     Utility util = new Utility();
-    UsageController usageController = new UsageController();
+    UsageController uController = new UsageController();
+    Rates rates = new Rates();
 
     @Override
     public void start(Stage primaryStage) {
@@ -94,10 +96,9 @@ public class MainClass extends Application {
                 // Setting users input.
                 double gasRate = Double.parseDouble(inputGasRate.getText());
                 double currentRate = Double.parseDouble(inputCurrentRate.getText());
-                Rates rates = new Rates();
+
                 rates.setGasRate(gasRate);
                 rates.setCurrentRate(currentRate);
-
                 getHomepage(primaryStage);
             }
             // If formats are incorrect, show error.
@@ -136,7 +137,6 @@ public class MainClass extends Application {
         VBox vboxUsage = new VBox(usageTypeLabel, newWeeklyUsage, vboxUsageAmount, vboxUsageDate);
 
         Button submitNewUsage = new Button("Submit New Usage");
-        Rates rates = new Rates();
 
         dateUsageStart.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -153,7 +153,7 @@ public class MainClass extends Application {
                 LocalDate startDateUsage = dateUsageStart.getValue();
                 LocalDate endDateUsage = dateUsageEnd.getValue();
                 String instanceKind = newWeeklyUsage.getSelectionModel().getSelectedItem().toString();
-                usageController.saveNewUsage(usageNew, rates.getGasRate(), rates.getCurrentRate(), startDateUsage, endDateUsage, instanceKind);
+                uController.saveNewUsage(usageNew, rates.getGasRate(), rates.getCurrentRate(), startDateUsage, endDateUsage, instanceKind);
             }
             // If formats are incorrect, show error.
             catch(NumberFormatException ex) {
@@ -209,35 +209,38 @@ public class MainClass extends Application {
         FlowPane centerPane = new FlowPane();
         root.setCenter(centerPane);
 
-        ArrayList<Double> weeklyUsage = usageController.getWeeklyUsage();
-        Double weeklyUsageGas = weeklyUsage.getFirst();
-        Double weeklyUsageCurrent = weeklyUsage.getLast();
-        ArrayList<Double> monthlyUsage = usageController.getMonthlyUsage();
-        Double monthlyUsageGas = monthlyUsage.getFirst();
-        Double monthlyUsageCurrent = monthlyUsage.getLast();
-        ArrayList<Double> yearlyUsage = usageController.getYearlyUsage();
-        Double yearlyUsageGas = yearlyUsage.getFirst();
-        Double yearlyUsageCurrent = yearlyUsage.getLast();
 
-        //TODO: make total usage for both gas and current and cost calculations.
-        Label weeklyUsageLabelGas = new Label("Average weekly gas usage: " + weeklyUsageGas);
-        Label monthlyUsageLabelGas = new Label("Average monthly gas usage: " + monthlyUsageGas);
-        Label yearlyUsageLabelGas = new Label("Average yearly gas usage: " + yearlyUsageGas);
+        Double weeklyGasAmount = uController.getWeeklyUsage().getFirst();
+        Double weeklyGasCost = uController.getCost(weeklyGasAmount).getFirst();
+        Double monthlyGasAmount = uController.getMonthlyUsage().getFirst();
+        Double monthlyGasCost = uController.getCost(monthlyGasAmount).getFirst();
+        Double yearlyGasAmount = uController.getYearlyUsage().getFirst();
+        Double yearlyGasCost = uController.getCost(yearlyGasAmount).getFirst();
+        Double weeklyCurrentAmount = uController.getWeeklyUsage().getLast();
+        Double weeklyCurrentCost = uController.getCost(weeklyCurrentAmount).getLast();
+        Double monthlyCurrentAmount = uController.getMonthlyUsage().getLast();
+        Double monthlyCurrentCost = uController.getCost(monthlyCurrentAmount).getLast();
+        Double yearlyCurrentAmount = uController.getYearlyUsage().getLast();
+        Double yearlyCurrentCost = uController.getCost(yearlyCurrentAmount).getLast();
+
+        Label weeklyUsageLabelGas = new Label("Average weekly gas usage: " + UsageController.roundTwoDecimals(weeklyGasAmount) + " m3.");
+        Label monthlyUsageLabelGas = new Label("Average monthly gas usage: " + UsageController.roundTwoDecimals(monthlyGasAmount) + " m3.");
+        Label yearlyUsageLabelGas = new Label("Average yearly gas usage: " + UsageController.roundTwoDecimals(yearlyGasAmount) + " m3.");
         VBox vboxGasUsage = new VBox(weeklyUsageLabelGas, monthlyUsageLabelGas, yearlyUsageLabelGas);
 
-        Label weeklyUsageLabelCurrent = new Label(" Average weekly current usage: " + weeklyUsageCurrent);
-        Label monthlyUsageLabelCurrent = new Label(" Average monthly current usage: " + monthlyUsageCurrent);
-        Label yearlyUsageLabelCurrent = new Label(" Average yearly current usage: " + yearlyUsageCurrent);
+        Label weeklyUsageLabelCurrent = new Label(" Average weekly current usage: " + UsageController.roundTwoDecimals(weeklyCurrentAmount) + " kWh.");
+        Label monthlyUsageLabelCurrent = new Label(" Average monthly current usage: " + UsageController.roundTwoDecimals(monthlyCurrentAmount) + " kWh.");
+        Label yearlyUsageLabelCurrent = new Label(" Average yearly current usage: " + UsageController.roundTwoDecimals(yearlyCurrentAmount) + " kWh.");
         VBox vboxUsageCurrent = new VBox(weeklyUsageLabelCurrent, monthlyUsageLabelCurrent, yearlyUsageLabelCurrent);
 
-        Label weeklyUsageLabelGasCost = new Label(" Weekly Usage Cost Gas: € "+ usageController.getWeeklyCost());
-        Label monthlyUsageLabelGasCost = new Label(" Monthly Usage Cost Gas: € " + usageController.getMonthlyCost());
-        Label yearlyUsageLabelGasCost = new Label(" Yearly Usage Cost Gas: € " + usageController.getYearlyCost());
+        Label weeklyUsageLabelGasCost = new Label(" Weekly Usage Cost Gas: € " + UsageController.roundTwoDecimals(weeklyGasCost));
+        Label monthlyUsageLabelGasCost = new Label(" Monthly Usage Cost Gas: € " + UsageController.roundTwoDecimals(monthlyGasCost));
+        Label yearlyUsageLabelGasCost = new Label(" Yearly Usage Cost Gas: € " + UsageController.roundTwoDecimals(yearlyGasCost));
         VBox gasCosts = new VBox(weeklyUsageLabelGasCost, monthlyUsageLabelGasCost, yearlyUsageLabelGasCost);
 
-        Label weeklyUsageLabelCurrentCost = new Label(" Weekly Usage Cost Current: € "+ usageController.getWeeklyCost());
-        Label monthlyUsageLabelCurrentCost = new Label(" Monthly Usage Cost Current: € " + usageController.getMonthlyCost());
-        Label yearlyUsageLabelCurrentCost = new Label(" Yearly Usage Cost Current: € " + usageController.getYearlyCost());
+        Label weeklyUsageLabelCurrentCost = new Label(" Weekly Usage Cost Current: € "+ UsageController.roundTwoDecimals(weeklyCurrentCost));
+        Label monthlyUsageLabelCurrentCost = new Label(" Monthly Usage Cost Current: € " + UsageController.roundTwoDecimals(monthlyCurrentCost));
+        Label yearlyUsageLabelCurrentCost = new Label(" Yearly Usage Cost Current: € " + UsageController.roundTwoDecimals(yearlyCurrentCost));
         VBox currentCosts = new VBox(weeklyUsageLabelCurrentCost, monthlyUsageLabelCurrentCost, yearlyUsageLabelCurrentCost);
 
         ListView<String> listView = new ListView<>();
@@ -246,7 +249,7 @@ public class MainClass extends Application {
         listView.setPrefWidth(1000);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        for (Usage usage : usageController.getList()) {
+        for (Usage usage : uController.getList()) {
             if (usage instanceof Gas) {
                 listView.getItems().add("Gas Usage: " + usage.getUsage() + " m³ from " + usage.getDateStart().format(formatter) + " to " + usage.getDateEnd().format(formatter));
             } else if (usage instanceof Current) {
