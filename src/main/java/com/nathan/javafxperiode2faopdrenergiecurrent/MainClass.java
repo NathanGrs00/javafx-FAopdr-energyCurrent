@@ -2,19 +2,17 @@ package com.nathan.javafxperiode2faopdrenergiecurrent;
 
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.*;
 import javafx.application.Application;
-import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MainClass extends Application {
     Utility util = new Utility();
@@ -30,15 +28,19 @@ public class MainClass extends Application {
         // User input for Customer class.
         TextField inputCustomerID = new TextField();
         VBox vboxID = util.createLabeledInput("Customer ID:", "Customer ID", inputCustomerID);
+        inputCustomerID.getStyleClass().add("input-customer-id");
 
         TextField inputFirstName = new TextField();
         VBox vboxFirstName = util.createLabeledInput("First name:", "First name", inputFirstName);
+        inputFirstName.getStyleClass().add("input-first-name");
 
         TextField inputLastName = new TextField();
         VBox vboxLastName = util.createLabeledInput("Last name:", "Last name", inputLastName);
+        inputLastName.getStyleClass().add("input-last-name");
 
         TextField inputAdvance = new TextField();
         VBox vboxAdvance = util.createLabeledInput("Advance:", "Advance", inputAdvance);
+        inputAdvance.getStyleClass().add("input-advance");
 
         // Saving the input to the setters of the Customer class.
         Button buttonSend = new Button("Send");
@@ -77,7 +79,11 @@ public class MainClass extends Application {
         inputFieldsCustomer.setSpacing(12);
         inputFieldsCustomer.setPadding(new Insets(0,20,0,20));
         Scene scene = new Scene(inputFieldsCustomer, 480, 270);
+        scene.getStylesheets().add(getClass().getResource("stylesheet.css").toExternalForm());
 
+        Image icon = new Image(getClass().getResourceAsStream("energy.png"));
+
+        primaryStage.getIcons().add(icon);
         primaryStage.setTitle("Energy company 'Current'");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
@@ -89,9 +95,11 @@ public class MainClass extends Application {
 
         TextField inputCurrentRate = new TextField();
         VBox vboxCurrentRate = util.createLabeledInput("Please enter the rate for Current per kWh:", "Current Rate", inputCurrentRate);
+        inputCurrentRate.getStyleClass().add("input-current-rate");
 
         TextField inputGasRate = new TextField();
         VBox vboxGasRate = util.createLabeledInput("Please enter the rate for Gas per m3:", "Gas Rate", inputGasRate);
+        inputGasRate.getStyleClass().add("input-gas-rate");
 
         VBox vboxRates = new VBox(vboxCurrentRate, vboxGasRate);
 
@@ -122,6 +130,7 @@ public class MainClass extends Application {
         inputFieldsRates.setPadding(new Insets(0,20,0,20));
 
         Scene scene = new Scene(inputFieldsRates, 480, 270);
+        scene.getStylesheets().add(getClass().getResource("stylesheet.css").toExternalForm());
         primaryStage.setScene(scene);
     }
 
@@ -135,9 +144,13 @@ public class MainClass extends Application {
         newWeeklyUsage.getItems().addAll("Gas","Current");
         TextField newWeeklyUsageTextField = new TextField();
         VBox vboxUsageAmount = util.createLabeledInput("Add new weekly usage","Usage amount", newWeeklyUsageTextField);
+        newWeeklyUsage.getStyleClass().add("combo-weekly-usage");
+        newWeeklyUsageTextField.getStyleClass().add("input-weekly-usage");
 
         DatePicker dateUsageStart = new DatePicker();
         DatePicker dateUsageEnd = new DatePicker();
+        dateUsageStart.getStyleClass().add("input-date-start");
+        dateUsageEnd.getStyleClass().add("input-date-end");
         VBox vboxUsageDate = util.createDateInput(dateUsageStart, dateUsageEnd);
         VBox vboxUsage = new VBox(usageTypeLabel, newWeeklyUsage, vboxUsageAmount, vboxUsageDate);
 
@@ -181,7 +194,8 @@ public class MainClass extends Application {
         vboxCenter.setPadding(new Insets(0,20,0,20));
 
         root.setCenter(vboxCenter);
-        Scene scene = new Scene(root, 1280, 720);
+        Scene scene = new Scene(root, 480, 270);
+        scene.getStylesheets().add(getClass().getResource("stylesheet.css").toExternalForm());
         primaryStage.setScene(scene);
     }
 
@@ -217,6 +231,7 @@ public class MainClass extends Application {
         BorderPane root = new BorderPane();
         root.setTop(getMenuBar(primaryStage));
         FlowPane centerPane = new FlowPane();
+        centerPane.getStyleClass().add("flow-pane");
         root.setCenter(centerPane);
 
         Double weeklyGasAmount = uController.getWeeklyUsage().getFirst();
@@ -270,6 +285,7 @@ public class MainClass extends Application {
         centerPane.getChildren().addAll(vboxGasUsage, vboxUsageCurrent, gasCosts, currentCosts, listView);
 
         Scene scene = new Scene(root, 1280, 720);
+        scene.getStylesheets().add(getClass().getResource("stylesheet.css").toExternalForm());
         primaryStage.setScene(scene);
     }
 

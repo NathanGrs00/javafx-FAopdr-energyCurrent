@@ -1,0 +1,27 @@
+.root {
+    -fx-background-color: #2b2a33;
+}
+.button {
+    -fx-text-fill: white;
+    -fx-background-color: #2d263d;
+    -fx-border-color: #2dfe;
+}
+.input-customer-id, .input-first-name, .input-last-name, .input-advance, .input-current-rate, .input-gas-rate, .input-weekly-usage, .input-date-start, .input-date-end, .combo-box, .text-field, .date-picker, .list-cell {
+    -fx-control-inner-background: #57526c;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: white;
+    -fx-background-color: #a095ce;
+}
+.label {
+    -fx-text-fill: white;
+    -fx-translate-y: -2;
+}
+
+.menu-bar, .menu-item {
+    -fx-background-color: #a095ce;
+    -fx-text-fill: rgba(26, 21, 21, 0.33);
+}
+.flow-pane {
+    -fx-translate-x: 150;
+    -fx-translate-y: 50;
+}
