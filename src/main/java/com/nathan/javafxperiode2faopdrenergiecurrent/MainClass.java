@@ -7,13 +7,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class MainClass extends Application {
     Utility util = new Utility();
@@ -138,6 +137,16 @@ public class MainClass extends Application {
 
         Button submitNewUsage = new Button("Submit New Usage");
         Rates rates = new Rates();
+
+        dateUsageStart.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                dateUsageEnd.setValue(newValue.plusDays(7));
+                restrictEndDatePicker(dateUsageEnd, newValue);
+            }
+        });
+
+        dateUsageEnd.setEditable(false);
+
         submitNewUsage.setOnAction(e ->{
             try {
                 double usageNew = Double.parseDouble(newWeeklyUsageTextField.getText());
@@ -176,12 +185,9 @@ public class MainClass extends Application {
         // TODO: make all navigation work.
         MenuItem menuItemNew1 = new MenuItem("New Usage");
         MenuItem menuItemUsage1 = new MenuItem("All Usage");
-        MenuItem menuItemUsage2 = new MenuItem("Per Year");
-        MenuItem menuItemUsage3 = new MenuItem("Per Month");
-        MenuItem menuItemUsage4 = new MenuItem("Per Year");
         MenuItem menuItemSettings = new MenuItem("Change Settings");
         menuNew.getItems().addAll(menuItemNew1);
-        menuUsage.getItems().addAll(menuItemUsage1, menuItemUsage2, menuItemUsage3, menuItemUsage4);
+        menuUsage.getItems().addAll(menuItemUsage1);
         menuSettings.getItems().addAll(menuItemSettings);
 
         menuItemNew1.setOnAction(e ->{
@@ -203,30 +209,66 @@ public class MainClass extends Application {
         FlowPane centerPane = new FlowPane();
         root.setCenter(centerPane);
 
+        ArrayList<Double> weeklyUsage = usageController.getWeeklyUsage();
+        Double weeklyUsageGas = weeklyUsage.getFirst();
+        Double weeklyUsageCurrent = weeklyUsage.getLast();
+        ArrayList<Double> monthlyUsage = usageController.getMonthlyUsage();
+        Double monthlyUsageGas = monthlyUsage.getFirst();
+        Double monthlyUsageCurrent = monthlyUsage.getLast();
+        ArrayList<Double> yearlyUsage = usageController.getYearlyUsage();
+        Double yearlyUsageGas = yearlyUsage.getFirst();
+        Double yearlyUsageCurrent = yearlyUsage.getLast();
+
         //TODO: make total usage for both gas and current and cost calculations.
-        Label weeklyUsageLabel = new Label("Weekly Usage: € "+ usageController.getWeeklyCost());
-        Label monthlyUsageLabel = new Label(" Monthly Usage: € " + usageController.getMonthlyCost());
-        Label yearlyUsageLabel = new Label(" Yearly Usage: € " + usageController.getYearlyCost());
+        Label weeklyUsageLabelGas = new Label("Average weekly gas usage: " + weeklyUsageGas);
+        Label monthlyUsageLabelGas = new Label("Average monthly gas usage: " + monthlyUsageGas);
+        Label yearlyUsageLabelGas = new Label("Average yearly gas usage: " + yearlyUsageGas);
+        VBox vboxGasUsage = new VBox(weeklyUsageLabelGas, monthlyUsageLabelGas, yearlyUsageLabelGas);
+
+        Label weeklyUsageLabelCurrent = new Label(" Average weekly current usage: " + weeklyUsageCurrent);
+        Label monthlyUsageLabelCurrent = new Label(" Average monthly current usage: " + monthlyUsageCurrent);
+        Label yearlyUsageLabelCurrent = new Label(" Average yearly current usage: " + yearlyUsageCurrent);
+        VBox vboxUsageCurrent = new VBox(weeklyUsageLabelCurrent, monthlyUsageLabelCurrent, yearlyUsageLabelCurrent);
+
+        Label weeklyUsageLabelGasCost = new Label(" Weekly Usage Cost Gas: € "+ usageController.getWeeklyCost());
+        Label monthlyUsageLabelGasCost = new Label(" Monthly Usage Cost Gas: € " + usageController.getMonthlyCost());
+        Label yearlyUsageLabelGasCost = new Label(" Yearly Usage Cost Gas: € " + usageController.getYearlyCost());
+        VBox gasCosts = new VBox(weeklyUsageLabelGasCost, monthlyUsageLabelGasCost, yearlyUsageLabelGasCost);
+
+        Label weeklyUsageLabelCurrentCost = new Label(" Weekly Usage Cost Current: € "+ usageController.getWeeklyCost());
+        Label monthlyUsageLabelCurrentCost = new Label(" Monthly Usage Cost Current: € " + usageController.getMonthlyCost());
+        Label yearlyUsageLabelCurrentCost = new Label(" Yearly Usage Cost Current: € " + usageController.getYearlyCost());
+        VBox currentCosts = new VBox(weeklyUsageLabelCurrentCost, monthlyUsageLabelCurrentCost, yearlyUsageLabelCurrentCost);
 
         ListView<String> listView = new ListView<>();
         listView.getItems().add("Usage Overview");
         listView.getItems().add("----------------------------");
         listView.setPrefWidth(1000);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         for (Usage usage : usageController.getList()) {
             if (usage instanceof Gas) {
-                listView.getItems().add("Gas Usage: " + usage.getUsage() + " m³ from " + usage.getDateStart() + " to " + usage.getDateEnd());
+                listView.getItems().add("Gas Usage: " + usage.getUsage() + " m³ from " + usage.getDateStart().format(formatter) + " to " + usage.getDateEnd().format(formatter));
             } else if (usage instanceof Current) {
-                listView.getItems().add("Current Usage: " + usage.getUsage() + " kWh from " + usage.getDateStart() + " to " + usage.getDateEnd());
+                listView.getItems().add("Current Usage: " + usage.getUsage() + " kWh from " + usage.getDateStart().format(formatter) + " to " + usage.getDateEnd().format(formatter));
             }
         }
 
-        centerPane.getChildren().addAll(weeklyUsageLabel, monthlyUsageLabel, yearlyUsageLabel, listView);
+        centerPane.getChildren().addAll(vboxGasUsage, vboxUsageCurrent, gasCosts, currentCosts, listView);
 
         Scene scene = new Scene(root, 1280, 720);
         primaryStage.setScene(scene);
     }
 
+    private void restrictEndDatePicker(DatePicker endDatePicker, LocalDate startDate) {
+        endDatePicker.setDayCellFactory(d -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                setDisable(item.isBefore(startDate.plusDays(7)) || item.isAfter(startDate.plusDays(7)));
+            }
+        });
+    }
     // Alert function to get alerts on screen.
     public void getAlert(String message){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
