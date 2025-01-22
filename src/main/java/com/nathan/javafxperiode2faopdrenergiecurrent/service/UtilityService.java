@@ -1,11 +1,11 @@
-package com.nathan.javafxperiode2faopdrenergiecurrent.model;
+package com.nathan.javafxperiode2faopdrenergiecurrent.service;
 
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 //Utility Class for convenience.
-public class Utility {
+public class UtilityService {
     // Function for creating labeled inputs.
     public VBox createLabeledInput(String labelText, String promptText, TextField inputField) {
         Label label = new Label(labelText);

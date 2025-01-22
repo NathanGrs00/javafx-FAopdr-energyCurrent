@@ -1,32 +1,13 @@
-package com.nathan.javafxperiode2faopdrenergiecurrent.model;
+package com.nathan.javafxperiode2faopdrenergiecurrent.service;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.nathan.javafxperiode2faopdrenergiecurrent.controller.UsageController;
+import com.nathan.javafxperiode2faopdrenergiecurrent.model.Current;
+import com.nathan.javafxperiode2faopdrenergiecurrent.model.Gas;
+import com.nathan.javafxperiode2faopdrenergiecurrent.model.Usage;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
-public class UsageController {
-    private ArrayList<Usage> usageList = new ArrayList<>();
-
-    //Returning all usages.
-    public ObservableList<Usage> getList(){
-        return FXCollections.observableArrayList(usageList);
-    }
-
-    //Save a new Usage. Either as Gas or Current and adding it to the list.
-    public void saveNewUsage(double usage, double gasRate, double currentRate, LocalDate dateStart, LocalDate dateEnd, String instanceKind){
-        if (instanceKind.equals("Gas")){
-            Gas gas = new Gas(gasRate, usage, dateStart, dateEnd);
-            usageList.add(gas);
-        }
-        else if (instanceKind.equals("Current")){
-            Current current = new Current(currentRate, usage, dateStart, dateEnd);
-            usageList.add(current);
-        }
-        else System.out.println("Invalid instance kind");
-    }
+public class CalculatorService {
     //Calculate total days in gas and current usages.
     public ArrayList<Double> getTotalDays(){
         ArrayList<Double> days = new ArrayList<>();
@@ -34,7 +15,7 @@ public class UsageController {
         final double[] totalDays = {0,0};
 
         //Foreach loop through the list.
-        usageList.forEach(usage->{
+        UsageController.getInstance().getUsageList().forEach(usage->{
             if (usage instanceof Gas){
                 //Should be always 7, because it's restricted weekly.
                 totalDays[0] += 7;
@@ -51,8 +32,8 @@ public class UsageController {
     public double[] getTotalUsage() {
         final double[] totalUsage = {0, 0};
         int i = 0;
-        while (i < usageList.size()) {
-            Usage usage = usageList.get(i);
+        while (i < UsageController.getInstance().getUsageList().size()) {
+            Usage usage = UsageController.getInstance().getUsageList().get(i);
             if (usage instanceof Gas) {
                 totalUsage[0] += usage.getUsage();
             } else if (usage instanceof Current) {
@@ -107,7 +88,7 @@ public class UsageController {
     public ArrayList<Double> getCost(Double usageAmount){
         ArrayList<Double> cost = new ArrayList<>();
         double[] totalCost = {0,0};
-        usageList.forEach(usage->{
+        UsageController.getInstance().getUsageList().forEach(usage->{
             if (usage instanceof Gas){
                 totalCost[0] += (usage.getRate() * usageAmount);
             }else if (usage instanceof Current){
@@ -120,7 +101,7 @@ public class UsageController {
     }
 
     //Homemade Round up function.
-    public static double roundTwoDecimals(double value){
+    public double roundTwoDecimals(double value){
         return Math.round(value * 100.0) / 100.0;
     }
 }
