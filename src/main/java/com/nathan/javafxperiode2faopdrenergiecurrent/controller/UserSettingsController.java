@@ -6,8 +6,6 @@ import com.nathan.javafxperiode2faopdrenergiecurrent.service.AlertService;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-
 public class UserSettingsController {
     AlertService alert = new AlertService();
 
@@ -35,10 +33,12 @@ public class UserSettingsController {
         // If formats are incorrect, show error.
         catch(NumberFormatException ex) {
             alert.getAlert("Please fill in the fields with the correct format.");
+            return;
         }
         // If inputs are still invalid, show error.
         catch(Exception ex) {
             alert.getAlert("Oops! Something went wrong.");
+            return;
         }
         MainClass mainClass = new MainClass();
         mainClass.navigateToRates(primaryStage, customer);

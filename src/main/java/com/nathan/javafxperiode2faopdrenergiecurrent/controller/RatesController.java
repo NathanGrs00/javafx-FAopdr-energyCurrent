@@ -2,7 +2,6 @@ package com.nathan.javafxperiode2faopdrenergiecurrent.controller;
 
 import com.nathan.javafxperiode2faopdrenergiecurrent.MainClass;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Rates;
-import com.nathan.javafxperiode2faopdrenergiecurrent.model.Usage;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.AlertService;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
