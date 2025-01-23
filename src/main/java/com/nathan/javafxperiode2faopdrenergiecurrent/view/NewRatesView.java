@@ -2,7 +2,6 @@ package com.nathan.javafxperiode2faopdrenergiecurrent.view;
 
 import com.nathan.javafxperiode2faopdrenergiecurrent.controller.RatesController;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Customer;
-import com.nathan.javafxperiode2faopdrenergiecurrent.model.Usage;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.UtilityService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,7 +12,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
+import java.util.Objects;
+
 
 public class NewRatesView {
     RatesController ratesController = new RatesController();
@@ -46,7 +46,9 @@ public class NewRatesView {
         inputFieldsRates.setPadding(new Insets(0,20,0,20));
 
         Scene scene = new Scene(inputFieldsRates, 480, 270);
-        //scene.getStylesheets().add(getClass().getResource("stylesheet.css").toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(
+                getClass().getResource("/com/nathan/javafxperiode2faopdrenergiecurrent/stylesheet.css")
+        ).toExternalForm());
         primaryStage.setScene(scene);
     }
 }

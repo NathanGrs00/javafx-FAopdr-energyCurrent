@@ -1,7 +1,6 @@
 package com.nathan.javafxperiode2faopdrenergiecurrent.view;
 
 import com.nathan.javafxperiode2faopdrenergiecurrent.controller.HomepageController;
-import com.nathan.javafxperiode2faopdrenergiecurrent.model.Usage;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.UtilityService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,7 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Objects;
 
 public class HomepageView {
     private final MenuBarView menuBar = new MenuBarView();
@@ -83,7 +82,9 @@ public class HomepageView {
 
         // Create and set the scene
         Scene scene = new Scene(root, 480, 270);
-        //scene.getStylesheets().add(getClass().getResource("stylesheet.css").toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(
+                getClass().getResource("/com/nathan/javafxperiode2faopdrenergiecurrent/stylesheet.css")
+        ).toExternalForm());
         primaryStage.setScene(scene);
     }
 }

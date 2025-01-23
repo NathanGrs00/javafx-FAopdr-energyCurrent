@@ -1,8 +1,6 @@
 package com.nathan.javafxperiode2faopdrenergiecurrent.view;
 
-import com.nathan.javafxperiode2faopdrenergiecurrent.MainClass;
 import com.nathan.javafxperiode2faopdrenergiecurrent.controller.UserSettingsController;
-import com.nathan.javafxperiode2faopdrenergiecurrent.model.Usage;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.UtilityService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,7 +11,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class UserSettingsView {
@@ -51,13 +48,16 @@ public class UserSettingsView {
         inputFieldsCustomer.setPadding(new Insets(0,20,0,20));
         //Putting the root as the scene.
         Scene scene = new Scene(inputFieldsCustomer, 480, 270);
-        // TODO scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("stylesheet.css")).toExternalForm());
+
+        scene.getStylesheets().add(Objects.requireNonNull(
+                getClass().getResource("/com/nathan/javafxperiode2faopdrenergiecurrent/stylesheet.css")
+        ).toExternalForm());
 
         //Setting icon.
-        //Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("energy.png")));
+        Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/nathan/javafxperiode2faopdrenergiecurrent/energy.png")));
 
         //Setting Stage options.
-        //primaryStage.getIcons().add(icon);
+        primaryStage.getIcons().add(icon);
         primaryStage.setTitle("Energy company 'Current'");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);

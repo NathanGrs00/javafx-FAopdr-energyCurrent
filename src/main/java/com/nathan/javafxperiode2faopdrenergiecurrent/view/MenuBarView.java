@@ -1,15 +1,12 @@
 package com.nathan.javafxperiode2faopdrenergiecurrent.view;
 
 import com.nathan.javafxperiode2faopdrenergiecurrent.MainClass;
-import com.nathan.javafxperiode2faopdrenergiecurrent.model.Rates;
-import com.nathan.javafxperiode2faopdrenergiecurrent.model.Usage;
 import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
 
 public class MenuBarView {
     public Node getMenuBar(Stage primaryStage) {

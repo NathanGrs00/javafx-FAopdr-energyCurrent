@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class OverviewView {
 
@@ -50,7 +51,9 @@ public class OverviewView {
         centerPane.getChildren().addAll(vboxGasUsage, vboxUsageCurrent, gasCosts, currentCosts, overviewController.getUsageList());
 
         Scene scene = new Scene(root, 1280, 720);
-        //scene.getStylesheets().add(getClass().getResource("stylesheet.css").toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(
+                getClass().getResource("/com/nathan/javafxperiode2faopdrenergiecurrent/stylesheet.css")
+        ).toExternalForm());
         primaryStage.setScene(scene);
     }
 }
