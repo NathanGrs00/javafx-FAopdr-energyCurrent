@@ -11,6 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class HomepageView {
@@ -37,6 +38,27 @@ public class HomepageView {
         // Date range selection
         DatePicker dateUsageStart = new DatePicker();
         DatePicker dateUsageEnd = new DatePicker();
+        // Disable manual editing for the second DatePicker
+        dateUsageEnd.setEditable(false);
+
+        // Add a listener to the first DatePicker
+        dateUsageStart.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                // Add 7 days to the selected date
+                LocalDate endDate = newValue.plusDays(7);
+
+                // Set the value of the second DatePicker
+                dateUsageEnd.setValue(endDate);
+
+                // Disable the second DatePicker to "lock" it
+                dateUsageEnd.setDisable(true);
+            } else {
+                // Clear and enable the second DatePicker if the first is cleared
+                dateUsageEnd.setValue(null);
+                dateUsageEnd.setDisable(false);
+            }
+        });
+
         dateUsageStart.getStyleClass().add("input-date-start");
         dateUsageEnd.getStyleClass().add("input-date-end");
         VBox vboxUsageDate = util.createDateInput(dateUsageStart, dateUsageEnd);

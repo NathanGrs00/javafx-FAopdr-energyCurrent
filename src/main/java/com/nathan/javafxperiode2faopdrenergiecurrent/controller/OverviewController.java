@@ -2,6 +2,7 @@ package com.nathan.javafxperiode2faopdrenergiecurrent.controller;
 
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Current;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Gas;
+import com.nathan.javafxperiode2faopdrenergiecurrent.model.Rates;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Usage;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.CalculatorService;
 import javafx.scene.control.ListView;
@@ -53,7 +54,6 @@ public class OverviewController {
         usageOverviewGas.add(weeklyGasCost);
         usageOverviewGas.add(monthlyGasCost);
         usageOverviewGas.add(yearlyGasCost);
-
         return usageOverviewGas;
     }
     public ArrayList<Double> getUsageOverviewCurrent(){

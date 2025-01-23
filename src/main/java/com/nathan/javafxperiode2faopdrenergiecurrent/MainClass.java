@@ -1,15 +1,13 @@
 package com.nathan.javafxperiode2faopdrenergiecurrent;
 
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.*;
-import com.nathan.javafxperiode2faopdrenergiecurrent.view.AllUsageView;
+import com.nathan.javafxperiode2faopdrenergiecurrent.view.OverviewView;
 import com.nathan.javafxperiode2faopdrenergiecurrent.view.HomepageView;
 import com.nathan.javafxperiode2faopdrenergiecurrent.view.NewRatesView;
 import com.nathan.javafxperiode2faopdrenergiecurrent.view.UserSettingsView;
 import javafx.application.Application;
 
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
 
 public class MainClass extends Application {
 
@@ -32,7 +30,7 @@ public class MainClass extends Application {
     }
 
     public void navigateToOverview(Stage primaryStage) {
-        AllUsageView allUsageView = new AllUsageView();
+        OverviewView allUsageView = new OverviewView();
         allUsageView.getUsageOverview(primaryStage);
     }
     // Launch it to the moon.

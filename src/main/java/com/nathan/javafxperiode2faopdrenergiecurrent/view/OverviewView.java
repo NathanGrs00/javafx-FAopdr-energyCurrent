@@ -1,7 +1,6 @@
 package com.nathan.javafxperiode2faopdrenergiecurrent.view;
 
 import com.nathan.javafxperiode2faopdrenergiecurrent.controller.OverviewController;
-import com.nathan.javafxperiode2faopdrenergiecurrent.model.Usage;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -11,7 +10,7 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
-public class AllUsageView {
+public class OverviewView {
 
     MenuBarView menuBarView = new MenuBarView();
 
@@ -43,8 +42,8 @@ public class AllUsageView {
         VBox gasCosts = new VBox(weeklyUsageLabelGasCost, monthlyUsageLabelGasCost, yearlyUsageLabelGasCost);
 
         Label weeklyUsageLabelCurrentCost = new Label(" Weekly Usage Cost Current: € "+ currentList.get(3));
-        Label monthlyUsageLabelCurrentCost = new Label(" Monthly Usage Cost Current: € " + gasList.get(4));
-        Label yearlyUsageLabelCurrentCost = new Label(" Yearly Usage Cost Current: € " + gasList.get(5));
+        Label monthlyUsageLabelCurrentCost = new Label(" Monthly Usage Cost Current: € " + currentList.get(4));
+        Label yearlyUsageLabelCurrentCost = new Label(" Yearly Usage Cost Current: € " + currentList.get(5));
         VBox currentCosts = new VBox(weeklyUsageLabelCurrentCost, monthlyUsageLabelCurrentCost, yearlyUsageLabelCurrentCost);
 
 

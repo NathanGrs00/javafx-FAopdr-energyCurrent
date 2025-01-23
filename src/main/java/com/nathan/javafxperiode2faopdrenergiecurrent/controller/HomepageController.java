@@ -25,8 +25,7 @@ public class HomepageController {
             LocalDate endDateUsage = dateUsageEnd.getValue();
             String instanceKind = newWeeklyUsage.getSelectionModel().getSelectedItem().toString();
 
-            Rates rates = new Rates();
-            UsageController.getInstance().saveNewUsage(usageNew, rates.getGasRate(), rates.getCurrentRate(), startDateUsage, endDateUsage, instanceKind);
+            UsageController.getInstance().saveNewUsage(usageNew, Rates.getInstance().getGasRate(), Rates.getInstance().getCurrentRate(), startDateUsage, endDateUsage, instanceKind);
             alert.getAlert("Usage successfully added to the list.");
         }
         // If formats are incorrect, show error.

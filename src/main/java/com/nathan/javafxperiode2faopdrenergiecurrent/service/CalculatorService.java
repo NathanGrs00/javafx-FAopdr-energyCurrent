@@ -3,6 +3,7 @@ package com.nathan.javafxperiode2faopdrenergiecurrent.service;
 import com.nathan.javafxperiode2faopdrenergiecurrent.controller.UsageController;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Current;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Gas;
+import com.nathan.javafxperiode2faopdrenergiecurrent.model.Rates;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Usage;
 
 import java.util.ArrayList;
@@ -88,11 +89,12 @@ public class CalculatorService {
     public ArrayList<Double> getCost(Double usageAmount){
         ArrayList<Double> cost = new ArrayList<>();
         double[] totalCost = {0,0};
+
         UsageController.getInstance().getUsageList().forEach(usage->{
             if (usage instanceof Gas){
-                totalCost[0] += (usage.getRate() * usageAmount);
+                totalCost[0] += (Rates.getInstance().getGasRate() * usageAmount);
             }else if (usage instanceof Current){
-                totalCost[1] += (usage.getRate() * usageAmount);
+                totalCost[1] += (Rates.getInstance().getCurrentRate() * usageAmount);
             }
         });
         cost.add(totalCost[0]);

@@ -2,7 +2,6 @@ package com.nathan.javafxperiode2faopdrenergiecurrent.controller;
 
 import com.nathan.javafxperiode2faopdrenergiecurrent.MainClass;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Customer;
-import com.nathan.javafxperiode2faopdrenergiecurrent.model.Usage;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.AlertService;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -21,7 +20,6 @@ public class UserSettingsController {
                 alert.getAlert("Please, fill out all fields.");
                 return;
             }
-
             //Parsing and getting values.
 
             int intCustomerID = Integer.parseInt(id.getText());
