@@ -2,6 +2,7 @@ module com.nathan.javafxperiode2faopdrenergiecurrent {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.desktop;
+    requires java.sql;
 
 
     opens com.nathan.javafxperiode2faopdrenergiecurrent to javafx.fxml;

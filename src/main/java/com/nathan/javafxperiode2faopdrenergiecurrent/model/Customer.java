@@ -7,6 +7,13 @@ public class Customer {
     private String customerLastName;
     private float customerAdvance;
 
+    public Customer(int customerID, String customerFirstName, String customerLastName, float customerAdvance) {
+        this.customerID = customerID;
+        this.customerFirstName = customerFirstName;
+        this.customerLastName = customerLastName;
+        this.customerAdvance = customerAdvance;
+    }
+
     public void setCustomerID(int customerID) {
         this.customerID = customerID;
     }

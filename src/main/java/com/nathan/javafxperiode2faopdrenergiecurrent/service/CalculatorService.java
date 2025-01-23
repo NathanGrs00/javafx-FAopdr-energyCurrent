@@ -1,6 +1,5 @@
 package com.nathan.javafxperiode2faopdrenergiecurrent.service;
 
-import com.nathan.javafxperiode2faopdrenergiecurrent.controller.UsageController;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Current;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Gas;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Rates;
@@ -9,6 +8,11 @@ import com.nathan.javafxperiode2faopdrenergiecurrent.model.Usage;
 import java.util.ArrayList;
 
 public class CalculatorService {
+    UsageService usageService = new UsageService();
+    ArrayList<Usage> usageList = usageService.getAllUsage();
+    RatesService ratesService = new RatesService();
+    Rates rates = ratesService.getRates();
+
     //Calculate total days in gas and current usages.
     public ArrayList<Double> getTotalDays(){
         ArrayList<Double> days = new ArrayList<>();
@@ -16,7 +20,7 @@ public class CalculatorService {
         final double[] totalDays = {0,0};
 
         //Foreach loop through the list.
-        UsageController.getInstance().getUsageList().forEach(usage->{
+        usageList.forEach(usage->{
             if (usage instanceof Gas){
                 //Should be always 7, because it's restricted weekly.
                 totalDays[0] += 7;
@@ -33,8 +37,8 @@ public class CalculatorService {
     public double[] getTotalUsage() {
         final double[] totalUsage = {0, 0};
         int i = 0;
-        while (i < UsageController.getInstance().getUsageList().size()) {
-            Usage usage = UsageController.getInstance().getUsageList().get(i);
+        while (i < usageList.size()) {
+            Usage usage = usageList.get(i);
             if (usage instanceof Gas) {
                 totalUsage[0] += usage.getUsage();
             } else if (usage instanceof Current) {
@@ -90,11 +94,11 @@ public class CalculatorService {
         ArrayList<Double> cost = new ArrayList<>();
         double[] totalCost = {0,0};
 
-        UsageController.getInstance().getUsageList().forEach(usage->{
+        usageList.forEach(usage->{
             if (usage instanceof Gas){
-                totalCost[0] += (Rates.getInstance().getGasRate() * usageAmount);
+                totalCost[0] += (rates.getGasRate() * usageAmount);
             }else if (usage instanceof Current){
-                totalCost[1] += (Rates.getInstance().getCurrentRate() * usageAmount);
+                totalCost[1] += (rates.getCurrentRate() * usageAmount);
             }
         });
         cost.add(totalCost[0]);

@@ -1,46 +1,38 @@
 package com.nathan.javafxperiode2faopdrenergiecurrent.controller;
 
-import com.nathan.javafxperiode2faopdrenergiecurrent.model.Current;
-import com.nathan.javafxperiode2faopdrenergiecurrent.model.Gas;
-import com.nathan.javafxperiode2faopdrenergiecurrent.model.Usage;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.nathan.javafxperiode2faopdrenergiecurrent.service.AlertService;
+import com.nathan.javafxperiode2faopdrenergiecurrent.service.UsageService;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextField;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 public class UsageController {
-    private static UsageController instance;
-    private ArrayList<Usage> usageList;
+    AlertService alert = new AlertService();
 
-    private UsageController() {
-        usageList = new ArrayList<>();
-    }
-    public static UsageController getInstance() {
-        if (instance == null) {
-            instance = new UsageController();
+    public void ValidateFields(ComboBox newWeeklyUsage, TextField newWeeklyUsageTextField, DatePicker dateUsageStart, DatePicker dateUsageEnd) {
+        try {
+            //Saving inputs as usageclass.
+            double usageNew = Double.parseDouble(newWeeklyUsageTextField.getText());
+            String instanceKind = newWeeklyUsage.getSelectionModel().getSelectedItem().toString();
+            LocalDate usageStartDate = dateUsageStart.getValue();
+            LocalDate usageEndDate = dateUsageEnd.getValue();
+            java.sql.Date sqlUsageStartDate = java.sql.Date.valueOf(usageStartDate);
+            java.sql.Date sqlUsageEndDate = java.sql.Date.valueOf(usageEndDate);
+
+            UsageService usageService = new UsageService();
+            usageService.saveNewUsage(usageNew, sqlUsageStartDate, sqlUsageEndDate, instanceKind);
+            alert.getAlert("Usage successfully added to the list.");
         }
-        return instance;
-    }
-
-    //Returning all usages.
-    public ObservableList<Usage> getList(){
-        return FXCollections.observableArrayList(usageList);
-    }
-
-    //Save a new Usage. Either as Gas or Current and adding it to the list.
-    public void saveNewUsage(double usage, double gasRate, double currentRate, LocalDate dateStart, LocalDate dateEnd, String instanceKind){
-        if (instanceKind.equals("Gas")){
-            Gas gas = new Gas(gasRate, usage, dateStart, dateEnd);
-            usageList.add(gas);
+        // If formats are incorrect, show error.
+        catch(NumberFormatException ex) {
+            alert.getAlert("Please fill in the fields with the correct format.");
         }
-        else if (instanceKind.equals("Current")){
-            Current current = new Current(currentRate, usage, dateStart, dateEnd);
-            usageList.add(current);
+        // More errors.
+        catch(Exception ex) {
+            System.out.println(ex.getMessage());
+            alert.getAlert("Oops! Something went wrong.");
         }
-    }
-
-    public ArrayList<Usage> getUsageList(){
-        return usageList;
     }
 }

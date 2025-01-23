@@ -1,6 +1,6 @@
 package com.nathan.javafxperiode2faopdrenergiecurrent.view;
 
-import com.nathan.javafxperiode2faopdrenergiecurrent.controller.HomepageController;
+import com.nathan.javafxperiode2faopdrenergiecurrent.controller.UsageController;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.UtilityService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,26 +13,26 @@ import javafx.stage.Stage;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class HomepageView {
-    private final MenuBarView menuBar = new MenuBarView();
+public class UsageView {
     private final UtilityService util = new UtilityService();
-    private final HomepageController hpController = new HomepageController();
+    private final UsageController usageController = new UsageController();
+    private final MenuBarView menuBar = new MenuBarView();
 
-    public void getHomepage(Stage primaryStage) {
+    public void setNewUsage(Stage primaryStage) {
         // Root pane setup
         BorderPane root = new BorderPane();
         root.setTop(menuBar.getMenuBar(primaryStage));
 
         // Usage type selection
         Label usageTypeLabel = new Label("Select type of usage:");
-        ComboBox<String> newWeeklyUsage = new ComboBox<>();
-        newWeeklyUsage.getItems().addAll("Gas", "Current");
+        ComboBox<String> usageKind = new ComboBox<>();
+        usageKind.getItems().addAll("Gas", "Current");
 
         // Usage amount input
-        TextField newWeeklyUsageTextField = new TextField();
-        VBox vboxUsageAmount = util.createLabeledInput("Add new weekly usage", "Usage amount", newWeeklyUsageTextField);
-        newWeeklyUsage.getStyleClass().add("combo-weekly-usage");
-        newWeeklyUsageTextField.getStyleClass().add("input-weekly-usage");
+        TextField usageAmount = new TextField();
+        VBox vboxUsageAmount = util.createLabeledInput("Add new weekly usage", "Usage amount", usageAmount);
+        usageKind.getStyleClass().add("combo-weekly-usage");
+        usageAmount.getStyleClass().add("input-weekly-usage");
 
         // Date range selection
         DatePicker dateUsageStart = new DatePicker();
@@ -61,7 +61,7 @@ public class HomepageView {
         dateUsageStart.getStyleClass().add("input-date-start");
         dateUsageEnd.getStyleClass().add("input-date-end");
         VBox vboxUsageDate = util.createDateInput(dateUsageStart, dateUsageEnd);
-        VBox vboxUsage = new VBox(usageTypeLabel, newWeeklyUsage, vboxUsageAmount, vboxUsageDate);
+        VBox vboxUsage = new VBox(usageTypeLabel, usageKind, vboxUsageAmount, vboxUsageDate);
 
         // Submit button for new usage
         Button submitNewUsage = new Button("Submit New Usage");
@@ -69,7 +69,7 @@ public class HomepageView {
         // Submit button action
         submitNewUsage.setOnAction(e -> {
             // Call the controller to validate and handle the form submission
-            hpController.ValidateFields(newWeeklyUsage, newWeeklyUsageTextField, dateUsageStart, dateUsageEnd);
+            usageController.ValidateFields(usageKind, usageAmount, dateUsageStart, dateUsageEnd);
         });
 
         // Layout configuration

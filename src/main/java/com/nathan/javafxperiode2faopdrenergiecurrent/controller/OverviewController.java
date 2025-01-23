@@ -4,6 +4,7 @@ import com.nathan.javafxperiode2faopdrenergiecurrent.model.Current;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Gas;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Usage;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.CalculatorService;
+import com.nathan.javafxperiode2faopdrenergiecurrent.service.UsageService;
 import javafx.scene.control.ListView;
 
 import java.time.format.DateTimeFormatter;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 
 public class OverviewController {
     CalculatorService calculatorService = new CalculatorService();
+    UsageService usageService = new UsageService();
 
     public ListView<String> getUsageList(){
         ListView<String> listView = new ListView<>();
@@ -22,11 +24,11 @@ public class OverviewController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         //Polymorphism to show different text for gas or current.
-        for (Usage usage : UsageController.getInstance().getUsageList()) {
+        for (Usage usage : usageService.getAllUsage()) {
             if (usage instanceof Gas) {
-                listView.getItems().add("Gas Usage: " + usage.getUsage() + " m³ from " + usage.getDateStart().format(formatter) + " to " + usage.getDateEnd().format(formatter));
+                listView.getItems().add("Gas Usage: " + usage.getUsage() + " m³ from " + usage.getDateStart().toLocalDate().format(formatter) + " to " + usage.getDateEnd().toLocalDate().format(formatter));
             } else if (usage instanceof Current) {
-                listView.getItems().add("Current Usage: " + usage.getUsage() + " kWh from " + usage.getDateStart().format(formatter) + " to " + usage.getDateEnd().format(formatter));
+                listView.getItems().add("Current Usage: " + usage.getUsage() + " kWh from " + usage.getDateStart().toLocalDate().format(formatter) + " to " + usage.getDateEnd().toLocalDate().format(formatter));
             }
         }
         return listView;

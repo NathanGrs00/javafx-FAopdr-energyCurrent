@@ -1,6 +1,6 @@
 package com.nathan.javafxperiode2faopdrenergiecurrent.view;
 
-import com.nathan.javafxperiode2faopdrenergiecurrent.controller.UserSettingsController;
+import com.nathan.javafxperiode2faopdrenergiecurrent.controller.CustomerController;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.UtilityService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,11 +13,11 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 
-public class UserSettingsView {
+public class CustomerView {
     UtilityService util = new UtilityService();
-    UserSettingsController userSettingsController = new UserSettingsController();
+    CustomerController customerController = new CustomerController();
 
-    public void setUserSettings(Stage primaryStage){
+    public void setCustomer(Stage primaryStage){
         // User input for Customer class.
         TextField inputCustomerID = new TextField();
         VBox vboxID = util.createLabeledInput("Customer ID:", "Customer ID", inputCustomerID);
@@ -38,7 +38,7 @@ public class UserSettingsView {
         // Saving the input to the setters of the Customer class.
         Button buttonSend = new Button("Send");
         buttonSend.setOnAction(e ->{
-            userSettingsController.ValidateFields(inputCustomerID, inputFirstName, inputLastName, inputAdvance, primaryStage);
+            customerController.ValidateFields(inputCustomerID, inputFirstName, inputLastName, inputAdvance, primaryStage);
         });
 
         //Setting alignment, spacing and more styling.
