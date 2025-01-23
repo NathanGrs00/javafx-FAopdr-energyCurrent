@@ -4,6 +4,8 @@ import com.nathan.javafxperiode2faopdrenergiecurrent.dao.UsageDAO;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Current;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Gas;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Usage;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -29,20 +31,21 @@ public class UsageService {
         }
     }
 
-    public ArrayList<Usage> getAllUsage(){
-        ResultSet allUsage = usageDAO.getAllUsage();
-        ArrayList<Usage> usages = new ArrayList<Usage>();
+    public ObservableList<Usage> getAllUsage(){
+        ObservableList<Usage> usageList = FXCollections.observableArrayList();
+        ResultSet allUsageResults = usageDAO.getAllUsage();
+
         try{
-            while (allUsage.next()){
-                if (allUsage.getString("usage_kind").equals("gas")){
-                    usages.add(new Gas(allUsage));
-                } else if (allUsage.getString("usage_kind").equals("current")){
-                    usages.add(new Current(allUsage));
+            while (allUsageResults.next()){
+                if (allUsageResults.getString("usage_kind").equals("gas")){
+                    usageList.add(new Gas(allUsageResults));
+                } else if (allUsageResults.getString("usage_kind").equals("current")){
+                    usageList.add(new Current(allUsageResults));
                 }
             }
         } catch(SQLException e){
             e.printStackTrace();
         }
-        return usages;
+        return usageList;
     }
 }

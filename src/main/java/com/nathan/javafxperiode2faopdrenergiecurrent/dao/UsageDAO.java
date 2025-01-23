@@ -47,13 +47,15 @@ public class UsageDAO {
     }
 
     public ResultSet getAllUsage() {
-        ResultSet usages;
+        String query = "SELECT u.* FROM `usage` u JOIN customer_usage cu ON u.id = cu.usage_id WHERE cu.customer_id = ?";
         try {
-            Statement getAllUsage = connection.createStatement();
-            usages = getAllUsage.executeQuery("SELECT * FROM `usage` u JOIN customer c WHERE c.id = u.id");
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setInt(1, CustomerService.getCurrentCustomerId());
+
+            return pstmt.executeQuery();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return usages;
     }
 }
