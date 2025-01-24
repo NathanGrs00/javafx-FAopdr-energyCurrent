@@ -2,9 +2,13 @@ package com.nathan.javafxperiode2faopdrenergiecurrent.view;
 
 import com.nathan.javafxperiode2faopdrenergiecurrent.controller.OverviewController;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -17,6 +21,7 @@ public class OverviewView {
 
     public void getUsageOverview(Stage primaryStage) {
         OverviewController overviewController = new OverviewController();
+        GridPane listOverview = overviewController.getUsageGrid();
         BorderPane root = new BorderPane();
         root.setTop(menuBarView.getMenuBar(primaryStage));
         FlowPane centerPane = new FlowPane();
@@ -47,8 +52,7 @@ public class OverviewView {
         Label yearlyUsageLabelCurrentCost = new Label(" Yearly Usage Cost Current: € " + currentList.get(5));
         VBox currentCosts = new VBox(weeklyUsageLabelCurrentCost, monthlyUsageLabelCurrentCost, yearlyUsageLabelCurrentCost);
 
-
-        centerPane.getChildren().addAll(vboxGasUsage, vboxUsageCurrent, gasCosts, currentCosts, overviewController.getUsageList());
+        centerPane.getChildren().addAll(vboxGasUsage, vboxUsageCurrent, gasCosts, currentCosts, listOverview);
 
         Scene scene = new Scene(root, 1280, 720);
         scene.getStylesheets().add(Objects.requireNonNull(

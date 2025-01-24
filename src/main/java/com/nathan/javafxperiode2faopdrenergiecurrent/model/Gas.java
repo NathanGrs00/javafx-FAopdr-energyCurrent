@@ -8,11 +8,11 @@ import java.sql.SQLException;
 public class Gas extends Usage {
 
     public Gas(ResultSet rs) throws SQLException {
-        super(rs.getDouble("amount"), rs.getDate("date_start"), rs.getDate("date_end"));
+        super(rs.getInt("id"), rs.getDouble("amount"), rs.getDate("date_start"), rs.getDate("date_end"));
     }
 
-    public Gas(double gasUsage, Date dateStart, Date dateEnd) {
-        super(gasUsage, dateStart, dateEnd);
+    public Gas(int id, double gasUsage, Date dateStart, Date dateEnd) {
+        super(id, gasUsage, dateStart, dateEnd);
     }
 
     // Returning a string.

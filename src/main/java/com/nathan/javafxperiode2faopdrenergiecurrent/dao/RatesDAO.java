@@ -40,7 +40,9 @@ public class RatesDAO {
         }
     }
 
-    public void updateRate(Rates rate){}
+    public void updateRate(Rates rate){
+
+    }
 
     public ResultSet getRates() {
         ResultSet rates;

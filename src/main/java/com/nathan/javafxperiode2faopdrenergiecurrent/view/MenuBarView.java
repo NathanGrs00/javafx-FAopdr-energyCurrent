@@ -1,6 +1,6 @@
 package com.nathan.javafxperiode2faopdrenergiecurrent.view;
 
-import com.nathan.javafxperiode2faopdrenergiecurrent.MainClass;
+import com.nathan.javafxperiode2faopdrenergiecurrent.EnergyCurrent;
 import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 public class MenuBarView {
     public Node getMenuBar(Stage primaryStage) {
-        MainClass mainClass = new MainClass();
+        EnergyCurrent mainClass = new EnergyCurrent();
         //Menu tabs
         Menu menuNew = new Menu("New");
         Menu menuUsage = new Menu("Usage");

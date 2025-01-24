@@ -4,6 +4,7 @@ import com.nathan.javafxperiode2faopdrenergiecurrent.model.Usage;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.CustomerService;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.DBConnector;
 
+import javax.xml.transform.Result;
 import java.sql.*;
 
 public class UsageDAO {
@@ -17,6 +18,7 @@ public class UsageDAO {
             throw new RuntimeException(e);
         }
     }
+
     public void addUsage(String kind, Usage usage){
         String query = "INSERT INTO `usage` (usage_kind, date_start, date_end, amount) VALUES (?,?,?,?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
@@ -40,8 +42,17 @@ public class UsageDAO {
                     }
                 }
             }
-
         } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteUsage(int id){
+        String query = "DELETE FROM `usage` WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)){
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        } catch (SQLException e){
             throw new RuntimeException(e);
         }
     }

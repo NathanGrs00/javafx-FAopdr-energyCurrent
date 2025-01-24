@@ -21,14 +21,19 @@ public class UsageService {
 
     //Save a new Usage. Either as Gas or Current and adding it to the list.
     public void saveNewUsage(double usage, Date dateStart, Date dateEnd, String instanceKind){
+        int id = 0;
         if (instanceKind.equals("Gas")){
-            Gas gas = new Gas(usage, dateStart, dateEnd);
+            Gas gas = new Gas(id, usage, dateStart, dateEnd);
             usageDAO.addUsage("gas", gas);
         }
         else if (instanceKind.equals("Current")){
-            Current current = new Current(usage, dateStart, dateEnd);
+            Current current = new Current(id, usage, dateStart, dateEnd);
             usageDAO.addUsage("current", current);
         }
+    }
+
+    public void deleteUsage(int id){
+        usageDAO.deleteUsage(id);
     }
 
     public ObservableList<Usage> getAllUsage(){

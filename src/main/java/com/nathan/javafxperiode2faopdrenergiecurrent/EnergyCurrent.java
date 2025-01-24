@@ -8,7 +8,7 @@ import javafx.application.Application;
 
 import javafx.stage.Stage;
 
-public class MainClass extends Application {
+public class EnergyCurrent extends Application {
 
     // Starting by going to the settings.
     @Override

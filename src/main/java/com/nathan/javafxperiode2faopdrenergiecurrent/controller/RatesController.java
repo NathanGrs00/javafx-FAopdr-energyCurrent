@@ -1,13 +1,13 @@
 package com.nathan.javafxperiode2faopdrenergiecurrent.controller;
 
-import com.nathan.javafxperiode2faopdrenergiecurrent.MainClass;
+import com.nathan.javafxperiode2faopdrenergiecurrent.EnergyCurrent;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.AlertService;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.RatesService;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class RatesController {
-    MainClass main = new MainClass();
+    EnergyCurrent main = new EnergyCurrent();
     AlertService alert = new AlertService();
 
     public void ValidateFields(int customerId, TextField rateCurrent, TextField rateGas, Stage primaryStage) {

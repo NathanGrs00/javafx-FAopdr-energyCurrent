@@ -3,9 +3,12 @@ package com.nathan.javafxperiode2faopdrenergiecurrent.controller;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Current;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Gas;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Usage;
+import com.nathan.javafxperiode2faopdrenergiecurrent.service.AlertService;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.CalculatorService;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.UsageService;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -13,26 +16,64 @@ import java.util.ArrayList;
 public class OverviewController {
     CalculatorService calculatorService = new CalculatorService();
     UsageService usageService = new UsageService();
+    AlertService alertService = new AlertService();
 
-    public ListView<String> getUsageList(){
-        ListView<String> listView = new ListView<>();
-        listView.getItems().add("Usage Overview");
-        listView.getItems().add("----------------------------");
-        listView.setPrefWidth(1000);
+    public GridPane getUsageGrid() {
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPrefWidth(1000);
 
-        //Formatting date to display european style.
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-        //Polymorphism to show different text for gas or current.
+        Label headerUsage = new Label("Usage Details");
+        gridPane.add(headerUsage, 0, 0);
+        headerUsage.setStyle("-fx-font-weight: bold;");
+
+        // Loop through all usage items and add them to the grid.
+        int row = 1;
         for (Usage usage : usageService.getAllUsage()) {
+            // Create usage details text.
+            String usageText;
             if (usage instanceof Gas) {
-                listView.getItems().add("Gas Usage: " + usage.getUsage() + " m³ from " + usage.getDateStart().toLocalDate().format(formatter) + " to " + usage.getDateEnd().toLocalDate().format(formatter));
+                usageText = "Gas Usage: " + usage.getUsage() + " m³ from " +
+                        usage.getDateStart().toLocalDate().format(formatter) + " to " +
+                        usage.getDateEnd().toLocalDate().format(formatter);
             } else if (usage instanceof Current) {
-                listView.getItems().add("Current Usage: " + usage.getUsage() + " kWh from " + usage.getDateStart().toLocalDate().format(formatter) + " to " + usage.getDateEnd().toLocalDate().format(formatter));
+                usageText = "Current Usage: " + usage.getUsage() + " kWh from " +
+                        usage.getDateStart().toLocalDate().format(formatter) + " to " +
+                        usage.getDateEnd().toLocalDate().format(formatter);
+            } else {
+                usageText = "Unknown Usage Type";
             }
+
+            Label usageLabel = new Label(usageText);
+
+            // Create a delete button for the row.
+            Button deleteButton = new Button("Delete");
+            deleteButton.setOnAction(event -> handleDeleteButton(usage.getId()));
+
+            gridPane.add(usageLabel, 0, row);
+            gridPane.add(deleteButton, 1, row);
+
+            GridPane.setHgrow(usageLabel, Priority.ALWAYS);
+
+            // Increment the row index for the next entry.
+            row++;
         }
-        return listView;
+
+        return gridPane;
     }
+
+    public void handleDeleteButton(int buttonId) {
+        try {
+            usageService.deleteUsage(buttonId);
+            alertService.getAlert("Item succesfully deleted");
+        } catch (Exception e) {
+            alertService.getAlert("Error deleting usage");
+        }
+    }
+
     public ArrayList<Double> getUsageOverviewGas(){
         ArrayList<Double> usageOverviewGas = new ArrayList<>();
         //Gas getters
@@ -57,6 +98,7 @@ public class OverviewController {
         usageOverviewGas.add(roundedYearlyGasCost);
         return usageOverviewGas;
     }
+
     public ArrayList<Double> getUsageOverviewCurrent(){
         ArrayList<Double> usageOverviewCurrent = new ArrayList<>();
         //Current getters
