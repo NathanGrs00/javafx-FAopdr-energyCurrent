@@ -12,16 +12,6 @@ public class Rates {
         this.gasRate = gasRate;
     }
 
-    public void setCurrentRate(double currentRate) {
-        this.currentRate = currentRate;
-    }
-
-    public void setGasRate(double gasRate) {
-        this.gasRate = gasRate;
-    }
-
-    public void setCustomerId(int customerID) {this.customerID = customerID;}
-
     public double getCurrentRate() {
         return currentRate;
     }

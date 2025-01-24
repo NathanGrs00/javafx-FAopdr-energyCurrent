@@ -4,11 +4,10 @@ import com.nathan.javafxperiode2faopdrenergiecurrent.model.Usage;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.CustomerService;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.DBConnector;
 
-import javax.xml.transform.Result;
 import java.sql.*;
 
 public class UsageDAO {
-    private Connection connection;
+    private final Connection connection;
 
     public UsageDAO() {
         try{

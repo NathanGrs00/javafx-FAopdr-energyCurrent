@@ -6,7 +6,7 @@ import com.nathan.javafxperiode2faopdrenergiecurrent.service.DBConnector;
 import java.sql.*;
 
 public class RatesDAO {
-    private Connection connection;
+    private final Connection connection;
 
     public RatesDAO() {
         try {
@@ -40,11 +40,11 @@ public class RatesDAO {
         }
     }
 
-    public void updateRate(int id, Rates rate) {
+    public void updateRate(int id, double gasRate, double currentRate) {
         String query = "UPDATE rates SET gas_rate = ?, current_rate = ? WHERE customer_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)){
-            pstmt.setDouble(1, rate.getGasRate());
-            pstmt.setDouble(2, rate.getCurrentRate());
+            pstmt.setDouble(1, gasRate);
+            pstmt.setDouble(2, currentRate);
             pstmt.setInt(3, id);
         }catch (SQLException e){
             throw new RuntimeException(e);
@@ -60,5 +60,19 @@ public class RatesDAO {
             throw new RuntimeException(e);
         }
         return rates;
+    }
+
+    public boolean checkHasRates(int customerId) {
+        String query = "SELECT COUNT(*) FROM rates r JOIN customer_rates cr ON cr.rates_id = r.id WHERE cr.customer_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)){
+            stmt.setInt(1, customerId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Check if the count is greater than 0.
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
     }
 }

@@ -12,8 +12,9 @@ public class UsageController {
     AlertService alert = new AlertService();
 
     public void ValidateFields(ComboBox newWeeklyUsage, TextField newWeeklyUsageTextField, DatePicker dateUsageStart, DatePicker dateUsageEnd) {
+        // First trying the user inputs.
         try {
-            //Saving inputs as usageclass.
+            //Saving inputs as usage class.
             double usageNew = Double.parseDouble(newWeeklyUsageTextField.getText());
             String instanceKind = newWeeklyUsage.getSelectionModel().getSelectedItem().toString();
             LocalDate usageStartDate = dateUsageStart.getValue();

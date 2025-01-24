@@ -19,13 +19,16 @@ public class OverviewController {
     AlertService alertService = new AlertService();
 
     public GridPane getUsageGrid() {
+        // Initializing grid.
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
         gridPane.setVgap(10);
         gridPane.setPrefWidth(1000);
 
+        // Formatting the date to EU style.
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
+        // Header label
         Label headerUsage = new Label("Usage Details");
         gridPane.add(headerUsage, 0, 0);
         headerUsage.setStyle("-fx-font-weight: bold;");
@@ -33,7 +36,7 @@ public class OverviewController {
         // Loop through all usage items and add them to the grid.
         int row = 1;
         for (Usage usage : usageService.getAllUsage()) {
-            // Create usage details text.
+            // Create text for row.
             String usageText;
             if (usage instanceof Gas) {
                 usageText = "Gas Usage: " + usage.getUsage() + " m³ from " +
@@ -49,7 +52,7 @@ public class OverviewController {
 
             Label usageLabel = new Label(usageText);
 
-            // Create a delete button for the row.
+            // Create a delete button for each row.
             Button deleteButton = new Button("Delete");
             deleteButton.setOnAction(event -> handleDeleteButton(usage.getId()));
 
@@ -65,6 +68,7 @@ public class OverviewController {
         return gridPane;
     }
 
+    //Handling the delete function and error messages.
     public void handleDeleteButton(int buttonId) {
         try {
             usageService.deleteUsage(buttonId);
@@ -74,6 +78,7 @@ public class OverviewController {
         }
     }
 
+    // Gas list for the overview information.
     public ArrayList<Double> getUsageOverviewGas(){
         ArrayList<Double> usageOverviewGas = new ArrayList<>();
         //Gas getters
@@ -99,6 +104,7 @@ public class OverviewController {
         return usageOverviewGas;
     }
 
+    // Current information for overview.
     public ArrayList<Double> getUsageOverviewCurrent(){
         ArrayList<Double> usageOverviewCurrent = new ArrayList<>();
         //Current getters

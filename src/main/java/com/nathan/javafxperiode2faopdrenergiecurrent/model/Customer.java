@@ -14,19 +14,6 @@ public class Customer {
         this.customerAdvance = customerAdvance;
     }
 
-    public void setCustomerID(int customerID) {
-        this.customerID = customerID;
-    }
-    public void setCustomerFirstName(String customerFirstName) {
-        this.customerFirstName = customerFirstName;
-    }
-    public void setCustomerLastName(String customerLastName) {
-        this.customerLastName = customerLastName;
-    }
-    public void setCustomerAdvance(float customerAdvance) {
-        this.customerAdvance = customerAdvance;
-    }
-
     public int getCustomerID() {
         return customerID;
     }

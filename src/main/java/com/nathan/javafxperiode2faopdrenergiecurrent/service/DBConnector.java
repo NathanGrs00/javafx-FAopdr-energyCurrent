@@ -6,14 +6,15 @@ import java.sql.SQLException;
 
 public class DBConnector {
 
+    // Connector class.
     public Connection getConnection() {
         String url = "jdbc:mysql://localhost:3306/energy_current?user=root&password=";
-        Connection conn = null;
+        Connection conn;
 
         try {
             conn = DriverManager.getConnection(url);
         } catch (SQLException e){
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return conn;
     }

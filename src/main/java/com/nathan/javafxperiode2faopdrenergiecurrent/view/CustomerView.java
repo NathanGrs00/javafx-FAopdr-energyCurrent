@@ -35,18 +35,17 @@ public class CustomerView {
         VBox vboxAdvance = util.createLabeledInput("Advance:", "Advance", inputAdvance);
         inputAdvance.getStyleClass().add("input-advance");
 
-        // Saving the input to the setters of the Customer class.
+        // Sending data to the controller to validate it.
         Button buttonSend = new Button("Send");
-        buttonSend.setOnAction(e ->{
+        buttonSend.setOnAction(e -> {
             customerController.ValidateFields(inputCustomerID, inputFirstName, inputLastName, inputAdvance, primaryStage);
         });
 
-        //Setting alignment, spacing and more styling.
+        // Setting styling.
         VBox inputFieldsCustomer = new VBox(vboxID, vboxFirstName, vboxLastName, vboxAdvance, buttonSend);
         inputFieldsCustomer.setAlignment(Pos.CENTER_LEFT);
         inputFieldsCustomer.setSpacing(12);
         inputFieldsCustomer.setPadding(new Insets(0,20,0,20));
-        //Putting the root as the scene.
         Scene scene = new Scene(inputFieldsCustomer, 480, 270);
 
         scene.getStylesheets().add(Objects.requireNonNull(

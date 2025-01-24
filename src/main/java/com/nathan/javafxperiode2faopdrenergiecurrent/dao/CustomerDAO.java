@@ -6,7 +6,7 @@ import com.nathan.javafxperiode2faopdrenergiecurrent.service.DBConnector;
 import java.sql.*;
 
 public class CustomerDAO {
-    private Connection connection;
+    private final Connection connection;
 
     public CustomerDAO() {
         try {

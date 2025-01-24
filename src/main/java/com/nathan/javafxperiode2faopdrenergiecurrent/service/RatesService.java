@@ -13,14 +13,14 @@ public class RatesService {
         this.ratesDAO = new RatesDAO();
     }
 
+    //Passing to database class.
     public void saveRates(int customerId, double rateCurrent, double rateGas) {
-        // First trying the users input.
         Rates rate = new Rates(customerId, rateCurrent, rateGas);
         ratesDAO.addRate(rate);
     }
 
-    public void updateRates(int customerId, Rates rate) {
-        ratesDAO.updateRate(customerId, rate);
+    public void updateRates(int customerId, double rateCurrent, double rateGas) {
+        ratesDAO.updateRate(customerId, rateCurrent, rateGas);
     }
 
     public Rates getRates(){
@@ -28,14 +28,19 @@ public class RatesService {
         Rates rates = null;
         try{
             while (allRates.next()){
+                // Putting the database data in Model format.
                 int id = allRates.getInt("id");
                 Double current_rate = allRates.getDouble("current_rate");
                 Double gas_rate = allRates.getDouble("gas_rate");
                 rates = new Rates(id, current_rate, gas_rate);
             }
         } catch(SQLException e){
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return rates;
+    }
+
+    public boolean hasRates(int customerId) {
+        return ratesDAO.checkHasRates(customerId);
     }
 }

@@ -17,16 +17,19 @@ public class EnergyCurrent extends Application {
         customerView.setCustomer(primaryStage);
     }
 
-    public void navigateToRates(int customerId, Stage primaryStage) {
+    // Navigating to the rates page.
+    public void navigateToRates(Stage primaryStage) {
         NewRatesView newRatesView = new NewRatesView();
-        newRatesView.setRates(customerId, primaryStage);
+        newRatesView.setRates(primaryStage);
     }
 
-    public void navigateToHomepage(Stage primaryStage) {
+    // Navigate to the new usage screen.
+    public void navigateToNewUsage(Stage primaryStage) {
         UsageView usageView = new UsageView();
         usageView.setNewUsage(primaryStage);
     }
 
+    // Navigate to the overview screen.
     public void navigateToOverview(Stage primaryStage) {
         OverviewView allUsageView = new OverviewView();
         allUsageView.getUsageOverview(primaryStage);

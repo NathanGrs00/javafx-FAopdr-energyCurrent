@@ -2,10 +2,7 @@ package com.nathan.javafxperiode2faopdrenergiecurrent.view;
 
 import com.nathan.javafxperiode2faopdrenergiecurrent.controller.OverviewController;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
@@ -20,18 +17,22 @@ public class OverviewView {
     MenuBarView menuBarView = new MenuBarView();
 
     public void getUsageOverview(Stage primaryStage) {
+        // Setting the grid.
         OverviewController overviewController = new OverviewController();
-        GridPane listOverview = overviewController.getUsageGrid();
         BorderPane root = new BorderPane();
-        root.setTop(menuBarView.getMenuBar(primaryStage));
         FlowPane centerPane = new FlowPane();
+
+        GridPane listOverview = overviewController.getUsageGrid();
+
+        root.setTop(menuBarView.getMenuBar(primaryStage));
         centerPane.getStyleClass().add("flow-pane");
         root.setCenter(centerPane);
 
+        // Getting the data.
         ArrayList<Double> gasList = overviewController.getUsageOverviewGas();
         ArrayList<Double> currentList = overviewController.getUsageOverviewCurrent();
 
-        //Labels to display all information. Using the round function to not show huge numbers.
+        // Labels to display all information.
         Label weeklyUsageLabelGas = new Label("Average weekly gas usage: " + gasList.get(0) + " m3.");
         Label monthlyUsageLabelGas = new Label("Average monthly gas usage: " + gasList.get(1) + " m3.");
         Label yearlyUsageLabelGas = new Label("Average yearly gas usage: " + gasList.get(2) + " m3.");

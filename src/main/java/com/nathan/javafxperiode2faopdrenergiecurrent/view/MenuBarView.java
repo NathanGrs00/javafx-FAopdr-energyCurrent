@@ -1,7 +1,6 @@
 package com.nathan.javafxperiode2faopdrenergiecurrent.view;
 
 import com.nathan.javafxperiode2faopdrenergiecurrent.EnergyCurrent;
-import com.nathan.javafxperiode2faopdrenergiecurrent.service.CustomerService;
 import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -31,7 +30,7 @@ public class MenuBarView {
 
         // Linking to pages.
         menuItemNew.setOnAction(e ->{
-            mainClass.navigateToHomepage(primaryStage);
+            mainClass.navigateToNewUsage(primaryStage);
         });
         menuItemUsage.setOnAction(e ->{
             mainClass.navigateToOverview(primaryStage);
@@ -40,7 +39,7 @@ public class MenuBarView {
             mainClass.start(primaryStage);
         });
         menuItemRates.setOnAction(e ->{
-            mainClass.navigateToRates(CustomerService.getCurrentCustomerId(), primaryStage);
+            mainClass.navigateToRates(primaryStage);
         });
 
         return menuBar;

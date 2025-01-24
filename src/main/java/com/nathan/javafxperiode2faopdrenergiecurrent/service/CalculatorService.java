@@ -4,13 +4,12 @@ import com.nathan.javafxperiode2faopdrenergiecurrent.model.Current;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Gas;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Rates;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Usage;
-import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 
 public class CalculatorService {
     UsageService usageService = new UsageService();
-    ObservableList<Usage> usageList = usageService.getAllUsage();
+    ArrayList<Usage> usageList = usageService.getAllUsage();
     RatesService ratesService = new RatesService();
     Rates rates = ratesService.getRates();
 

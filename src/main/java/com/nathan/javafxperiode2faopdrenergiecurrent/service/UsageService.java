@@ -4,8 +4,6 @@ import com.nathan.javafxperiode2faopdrenergiecurrent.dao.UsageDAO;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Current;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Gas;
 import com.nathan.javafxperiode2faopdrenergiecurrent.model.Usage;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -19,7 +17,7 @@ public class UsageService {
         usageDAO = new UsageDAO();
     }
 
-    //Save a new Usage. Either as Gas or Current and adding it to the list.
+    //Save a new Usage. Either as Gas or Current and pass it to the database.
     public void saveNewUsage(double usage, Date dateStart, Date dateEnd, String instanceKind){
         int id = 0;
         if (instanceKind.equals("Gas")){
@@ -32,12 +30,14 @@ public class UsageService {
         }
     }
 
+    // Passing to DAO class.
     public void deleteUsage(int id){
         usageDAO.deleteUsage(id);
     }
 
-    public ObservableList<Usage> getAllUsage(){
-        ObservableList<Usage> usageList = FXCollections.observableArrayList();
+    // Get List of all usage and saving them as models.
+    public ArrayList<Usage> getAllUsage(){
+        ArrayList<Usage> usageList = new ArrayList<>();
         ResultSet allUsageResults = usageDAO.getAllUsage();
 
         try{
@@ -49,7 +49,7 @@ public class UsageService {
                 }
             }
         } catch(SQLException e){
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return usageList;
     }

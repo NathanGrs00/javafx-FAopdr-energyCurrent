@@ -1,6 +1,7 @@
 package com.nathan.javafxperiode2faopdrenergiecurrent.view;
 
 import com.nathan.javafxperiode2faopdrenergiecurrent.controller.RatesController;
+import com.nathan.javafxperiode2faopdrenergiecurrent.service.CustomerService;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.UtilityService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,10 +18,10 @@ public class NewRatesView {
     private final UtilityService util = new UtilityService();
     private final RatesController ratesController = new RatesController();
 
-    public void setRates(int customerId, Stage primaryStage) {
+    public void setRates(Stage primaryStage) {
         Label helloMessage = new Label("Hello, Please insert the following rates.");
 
-        //User inputs
+        //User inputs for rates
         TextField inputCurrentRate = new TextField();
         VBox vboxCurrentRate = util.createLabeledInput("Please enter the rate for Current per kWh:", "Current Rate", inputCurrentRate);
         inputCurrentRate.getStyleClass().add("input-current-rate");
@@ -34,7 +35,7 @@ public class NewRatesView {
         //Button with actions when pressed.
         Button buttonSend = new Button("Send");
         buttonSend.setOnAction(e ->{
-            ratesController.ValidateFields(customerId, inputCurrentRate, inputGasRate, primaryStage);
+            ratesController.ValidateFields(CustomerService.getCurrentCustomerId(), inputCurrentRate, inputGasRate, primaryStage);
         });
 
         // Layout options
