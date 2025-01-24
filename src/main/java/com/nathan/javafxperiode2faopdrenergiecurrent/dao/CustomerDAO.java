@@ -49,4 +49,14 @@ public class CustomerDAO {
             throw new RuntimeException(e);
         }
     }
+    public boolean existCustomer(int customerID) {
+        String query = "SELECT * FROM customer WHERE id=?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)){
+            pstmt.setInt(1, customerID);
+            ResultSet rs = pstmt.executeQuery();
+            return rs.next();
+        } catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
 }

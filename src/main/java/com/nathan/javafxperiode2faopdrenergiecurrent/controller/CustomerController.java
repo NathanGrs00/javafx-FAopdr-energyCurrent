@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 
 public class CustomerController {
     EnergyCurrent main = new EnergyCurrent();
+    CustomerService customerService = new CustomerService();
     AlertService alert = new AlertService();
 
     public void ValidateFields(TextField id, TextField firstName, TextField lastName, TextField yearlyAdvance, Stage primaryStage) {
@@ -20,6 +21,12 @@ public class CustomerController {
             String strFirstName = firstName.getText();
             String strLastName = lastName.getText();
             float fltAdvance = Float.parseFloat(yearlyAdvance.getText());
+
+            boolean exists = customerService.existsInDatabase(intCustomerID);
+            if (exists) {
+                alert.getAlert("User already exists!");
+                return;
+            }
 
             CustomerService customerService = new CustomerService();
             CustomerService.setCurrentCustomerId(intCustomerID);

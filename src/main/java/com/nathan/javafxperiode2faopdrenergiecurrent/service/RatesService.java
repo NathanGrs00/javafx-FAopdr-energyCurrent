@@ -19,6 +19,10 @@ public class RatesService {
         ratesDAO.addRate(rate);
     }
 
+    public void updateRates(int customerId, Rates rate) {
+        ratesDAO.updateRate(customerId, rate);
+    }
+
     public Rates getRates(){
         ResultSet allRates = ratesDAO.getRates();
         Rates rates = null;

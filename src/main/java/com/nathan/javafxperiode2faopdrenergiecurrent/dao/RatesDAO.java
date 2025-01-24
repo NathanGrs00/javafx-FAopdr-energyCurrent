@@ -40,8 +40,15 @@ public class RatesDAO {
         }
     }
 
-    public void updateRate(Rates rate){
-
+    public void updateRate(int id, Rates rate) {
+        String query = "UPDATE rates SET gas_rate = ?, current_rate = ? WHERE customer_id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)){
+            pstmt.setDouble(1, rate.getGasRate());
+            pstmt.setDouble(2, rate.getCurrentRate());
+            pstmt.setInt(3, id);
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
     }
 
     public ResultSet getRates() {

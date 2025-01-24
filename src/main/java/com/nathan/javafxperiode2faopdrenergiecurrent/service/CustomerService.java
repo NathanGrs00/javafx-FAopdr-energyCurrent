@@ -16,6 +16,10 @@ public class CustomerService {
         customerDAO.addCustomer(customer);
     }
 
+    public boolean existsInDatabase(int id) {
+        return customerDAO.existCustomer(id);
+    }
+
     public static int getCurrentCustomerId() {
         return currentCustomerId;
     }

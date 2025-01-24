@@ -2,6 +2,7 @@ package com.nathan.javafxperiode2faopdrenergiecurrent.controller;
 
 import com.nathan.javafxperiode2faopdrenergiecurrent.EnergyCurrent;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.AlertService;
+import com.nathan.javafxperiode2faopdrenergiecurrent.service.CustomerService;
 import com.nathan.javafxperiode2faopdrenergiecurrent.service.RatesService;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -9,6 +10,7 @@ import javafx.stage.Stage;
 public class RatesController {
     EnergyCurrent main = new EnergyCurrent();
     AlertService alert = new AlertService();
+    RatesService ratesService = new RatesService();
 
     public void ValidateFields(int customerId, TextField rateCurrent, TextField rateGas, Stage primaryStage) {
         // First trying the users input.
@@ -35,5 +37,9 @@ public class RatesController {
             alert.getAlert("Oops! Something went wrong.");
             ex.printStackTrace();
         }
+    }
+
+    public void updateRates(){
+        ratesService.updateRates(CustomerService.getCurrentCustomerId(),ratesService.getRates());
     }
 }
